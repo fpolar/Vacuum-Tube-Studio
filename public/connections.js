@@ -1,15 +1,18 @@
-
-var client = new Colyseus.Client('wss://localhost:3000');
-var room = client.join("my_room");
-console.log(room);
-
-
+var client, room;
 var players = {};
 var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
 
+function connectToRoom(mode){
 
-room.onJoin.add(function() {
-	if(mode == 0){
+	client = new Colyseus.Client('wss://localhost:3000');
+	room = client.join("my_room");
+	console.log("joined" + room);
+
+	window.addEventListener("error", function (e) {
+		room.send({error:e.message})
+	});
+
+	room.onJoin.add(function() {
 	    console.log(client.id, "joined", room.name);
 	    console.log(room.state);
 		room.state.players.onAdd = function(player, sessionId) {
@@ -25,16 +28,13 @@ room.onJoin.add(function() {
 			document.body.removeChild(players[sessionId]);
 			delete players[sessionId];
 		}
-
-		room.state.players.onChange = function (player, sessionId) {
-			var dom = players[sessionId];
-			// dom.style.left = player.x + "px";
-			// dom.style.top = player.y + "px";
-			drawDot(players.x, players.y, players.z, dom.style.background)
+		if(mode == 0){
+			room.state.players.onChange = function (player, sessionId) {
+				var dom = players[sessionId];
+				// dom.style.left = player.x + "px";
+				// dom.style.top = player.y + "px";
+				drawDot(player.x, player.y, player.z, dom.style.background)
+			}
 		}
-	}
-});
-
-window.addEventListener("error", function (e) {
-	room.send({error:e.type})
-});
+	});
+}

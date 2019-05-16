@@ -8,8 +8,7 @@ var maxY = garden.clientHeight - ball.clientHeight;
 function brush_init(){
  	$("#buttons").hide();
 	$("#brush_ui").show();
-
-  mode = 1;
+  connectToRoom(1);
 
 	ball   = document.querySelector('.ball');
 	garden = document.querySelector('.garden');

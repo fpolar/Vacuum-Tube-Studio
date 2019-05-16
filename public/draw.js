@@ -1,6 +1,6 @@
 
     // Variables for referencing the canvas and 2dcanvas context
-    var canvas,ctx,mode;
+    var canvas,ctx;
 
     // Variables to keep track of the mouse position and left-button status 
     var mouseX,mouseY,mouseDown=0;
@@ -38,6 +38,7 @@
         ctx.arc(x, y, size, 0, Math.PI*2, true); 
         ctx.closePath();
         ctx.fill();
+        console.log("drawing - x: "+x+" y: "+y);
         //room.send({ctx:ctx, x:x, y:y, size:size});
     } 
 
@@ -131,8 +132,7 @@
         
         $("#sketchpadapp").show();
         $("#buttons").hide();
-
-        mode = 0;
+        connectToRoom(0);
 
         // If the browser supports the canvas tag, get the 2d drawing context for this canvas
         if (canvas.getContext)

@@ -1,0 +1,37 @@
+{
+  "//1": "describes your app and its dependencies",
+  "//2": "https://docs.npmjs.com/files/package.json",
+  "//3": "updating this file will download and update your packages",
+  "name": "https_test",
+  "version": "0.0.1",
+  "description": "A simple Node app built on Express, instantly up and running.",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon --watch '**' --exec ts-node server.ts"
+  },
+  "dependencies": {
+    "@colyseus/schema": "^0.4.32",
+    "colyseus": "^0.10.7",
+    "colyseus.js": "^0.10.5",
+    "express": "^4.16.4",
+    "typescript": "^3.4.5"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/hello-express"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ],
+  "devDependencies": {
+    "@colyseus/monitor": "^0.10.0",
+    "https-localhost": "^4.1.0",
+    "ts-node": "^8.1.0"
+  },
+  "author": ""
+}

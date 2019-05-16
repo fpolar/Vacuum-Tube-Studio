@@ -1,0 +1,45 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Vacuum Tube Studio</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="colyseus.js"></script>
+    <script src="draw.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div id="buttons">
+      <button onclick="canvas_init()">Canvas</button>
+      <button onclick="brush_init()">Brush</button>
+    </div>
+    <div id="sketchpadapp">
+        <div class="leftside">
+             Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
+             Draw something by tapping or dragging.<br/><br/>
+             Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
+             <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
+        </div>
+        <div class="rightside">
+            <canvas id="sketchpad" height="300" width="400">
+            </canvas>
+        </div>
+    </div>
+    <div id="brush_ui">
+      <div class="garden">
+        <div class="ball" style="top: -10px; left: 80px;"></div>
+      </div>
+      <pre class="output">beta : -90 <br> gamma: 0 </pre>
+    </div>
+    <script src="brush.js"></script>
+    <script src="connections.js"></script>
+    </body>
+</html>

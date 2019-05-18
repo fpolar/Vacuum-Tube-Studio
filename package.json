@@ -7,13 +7,15 @@
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "ts-node server.ts & node server.js"
+    "start": "ts-node server.ts",
+    "debug": "node --inspect lib/server.js"
   },
   "dependencies": {
     "@colyseus/schema": "^0.4.32",
     "colyseus": "^0.10.7",
     "colyseus.js": "^0.10.5",
     "express": "^4.16.4",
+    "ngrok": "^3.1.1",
     "typescript": "^3.4.5"
   },
   "engines": {

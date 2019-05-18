@@ -70,6 +70,10 @@ export class MyRoom extends Room<State> {
         this.state.movePlayer(client.sessionId, data);
     }
 
+    onError (client, data) {
+        console.log("MyRoom error from", client.sessionId, ":", data);
+    }
+
     onDispose () {
         console.log("Dispose MyRoom");
     }

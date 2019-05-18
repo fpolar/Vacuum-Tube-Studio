@@ -4,16 +4,23 @@ var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
 
 function connectToRoom(mode){
 
-	client = new Colyseus.Client('wss://localhost:3000');
-	room = client.join("my_room");
-	console.log("joined" + room);
-
-	window.addEventListener("error", function (e) {
-		room.send({error:e.message})
+	var url = window.location.hostname;
+	var socket =  'wss://'+url;
+	if(url=="localhost"){
+		socket+=window.location.port;
+	}
+	client = new Colyseus.Client(socket);
+	client.onError.add(function(err) {
+ 		debugOnSite(objectPropertiesString(err));
+ 		// debugOnSite(objectPropertiesString(client));
+ 		// debugOnSite(client.id);
 	});
+	// client.id = "aY_JVTde2"
+	room = client.join("my_room");
 
 	room.onJoin.add(function() {
-	    console.log(client.id, "joined", room.name);
+		debugOnSite(client.id + " joined " + room.name);
+	    console.log(client.id, " joined ", room.name);
 	    console.log(room.state);
 		room.state.players.onAdd = function(player, sessionId) {
 	  		var dom = document.createElement("div");
@@ -22,6 +29,12 @@ function connectToRoom(mode){
 			dom.innerHTML = "Player " + sessionId;
 			players[sessionId] = dom;
 			document.body.appendChild(dom);
+
+			window.addEventListener('deviceorientation', handleOrientation);
+
+			window.addEventListener("error", function (e) {
+				room.send({error:e.message})
+			});
 		}
 
 		room.state.players.onRemove = function(player, sessionId) {

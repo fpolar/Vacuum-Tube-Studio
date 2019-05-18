@@ -15,8 +15,6 @@ function brush_init(){
 	output = document.querySelector('.output');
 	maxX = garden.clientWidth  - ball.clientWidth;
 	maxY = garden.clientHeight - ball.clientHeight;
-
-	window.addEventListener('deviceorientation', handleOrientation);
 }
 
 function handleOrientation(event) {

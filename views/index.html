@@ -20,15 +20,15 @@
   <body>
     <div id="debug"> </div>
     <div id="buttons">
-      <button onclick="canvas_init()">Canvas</button>
-      <button onclick="brush_init()">Brush</button>
+      <button onclick="canvas_init()">🖼️</button>
+      <button onclick="brush_init()">🖌️</button>
     </div>
     <div id="canvas_ui">
         <div id="toolbar">
              Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
              Draw something by tapping or dragging.<br/><br/>
              Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
-             <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
+             <input type="submit" value="Clear" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
         </div>
         <div id="canvas_container">
             <canvas id="canvas">
@@ -41,7 +41,7 @@
         <div class="ball" style="top: -10px; left: 80px;"></div>
       </div>
       <div id="player_tag"></div>
-      <pre class="output">beta : -90 <br> gamma: 0 </pre>
+      <div class="output">beta : -90 <br> gamma: 0 </div>
     </div>
     <script src="brush.js"></script>
     <script src="connections.js"></script>

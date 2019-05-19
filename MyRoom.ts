@@ -10,11 +10,11 @@ export class Player extends Schema {
     @type("string")
     sessionId = "";
     @type("number")
-    x = Math.floor(Math.random() * 400);
+    x = -100;
     @type("number")
-    y = Math.floor(Math.random() * 400);
+    y = -100;
     @type("number")
-    z = Math.floor(Math.random() * 400);
+    z = -100;
     @type("number")
     alpha = Math.floor(Math.random() * 400);
     @type("number")

@@ -4,6 +4,18 @@ var players = {};
 
 var main_player;
 
+// function adjustButtonCSS(){
+// 	console.log($("#buttons button"), window.innerWidth)
+// 	if(window.innerWidth<400 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+// 		$("#buttons button").css("padding-right", "20vh");
+// 	}else{
+// 		$("#buttons button").css("padding-right", "0");
+// 	}
+// }
+
+// window.addEventListener("load", adjustButtonCSS);
+// window.addEventListener("resize", adjustButtonCSS);
+
 function connectToRoom(mode){
 
 	var url = window.location.hostname;
@@ -38,8 +50,7 @@ function connectToRoom(mode){
 				main_player = player;
 				console.log("setting main player", dom);
 				$(".ball").css("background-color", player.color);
-				$(".ball").append(dom);
-				$("#player_tag").append(dom);
+				$("#player_tag").append("<div class='player' style='background:"+player.color+"'>"+player.emoji+"</div>");
 			}
 
 			document.getElementById("player_container").appendChild(dom);

@@ -21,13 +21,24 @@
   border-radius: 100%;
 }
 
-#brush_player{
-    position: fixed;
+#player_tag{
+    /*position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
     height: 10vh;
-    padding: 1%;
+    */
+    float:left;
+    width: 100%;
+    padding: 3% 9% 0 9%;
+}
+#player_tag .player{
+  width: 100%;
+  font-size: 20vh;
+}
+.output{
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 /*canvas style*/
 #canvas_ui {
@@ -58,12 +69,14 @@
     padding: 1%;
 }
 .player {
+  text-align: center;
   font-size: 3vw;
   width:5%;
   height: 100%;
   overflow: hidden;
   position: relative;
   float: left;
+  border-radius: 8px;
 }
 #canvas {
     float:left;
@@ -130,8 +143,12 @@ input {
 }
 
 button {
-  font-size: 16px;
-  border-radius: 3px;
+  margin: 5% 15%;
+  width:70%;
+  height: 30vh;
+  font-size: 15vh;
+  text-align: center;
+  border-radius: 8px;
   background-color: lightgrey;
   border: 1px solid grey;
   box-shadow: 2px 2px teal;

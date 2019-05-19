@@ -20,8 +20,10 @@ function brush_init(){
 function handleOrientation(event) {
   var x = event.gamma; // In degree in the range [-90,90]
   var y = event.beta;  // In degree in the range [-180,180]
+  var z = event.alpha; // In degree in the range [0,360]
 
-  output.innerHTML  = "beta : " + x + "\n";
+  output.innerHTML  = "alpha : " + z + "\n";
+  output.innerHTML += "beta : " + x + "\n";
   output.innerHTML += "gamma: " + y + "\n";
 
   // Because we don't want to have the device upside down
@@ -36,7 +38,7 @@ function handleOrientation(event) {
 
   xOut = x/180;
   yOut = y/180;
-  zOut = 10;
+  zOut = z/360;
   room.send({x:xOut, y:yOut, z:zOut, alpha:event.alpha, beta:event.beta, gamma:event.gamma});
 
 
@@ -44,4 +46,6 @@ function handleOrientation(event) {
   // It center the positioning point to the center of the ball
   ball.style.left  = (maxX*x/180 - 10) + "px";
   ball.style.top = (maxY*y/180 - 10) + "px";
+  ball.style.width = (3+zOut*37) + "px";
+  ball.style.height = (3+zOut*37) + "px";
 }

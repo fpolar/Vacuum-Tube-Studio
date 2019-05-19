@@ -2,6 +2,7 @@ var mobile_debug = false;
 var client, room;
 var players = {};
 
+var main_player;
 
 function connectToRoom(mode){
 
@@ -20,29 +21,26 @@ function connectToRoom(mode){
 	room = client.join("my_room");
 
 	room.onJoin.add(function() {
+
 		if(mobile_debug) debugOnSite(client.id + " joined " + room.name);
-	    console.log(client.id, " joined ", room.name);
+	    console.log(room.sessionId, " joined ", room.name);
+
 		room.state.players.onAdd = function(player, sessionId) {
-			console.log(player);
+			console.log(client, sessionId, player);
 	  		var dom = document.createElement("div");
 			dom.className = "player";
 			dom.id = sessionId;
-
-			// var bgColor = player.color;
-			// var playerEmoji = player.emoji;
-			// if(playerEmoji == ""){
-			// 	console.log("setting player emoji");
-			// 	playerEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-			// 	room.send({emoji: playerEmoji});
-			// }
-			// if(bgColor == ""){
-			// 	console.log("setting player color");
-			// 	bgColor = colors[Math.floor(Math.random() * colors.length)]
-			// 	room.send({color: bgColor});
-			// }
 			dom.innerHTML = player.emoji;
 			dom.style.background = player.color;
 			players[sessionId] = dom;
+
+			if(room.sessionId == sessionId){
+				main_player = player;
+				console.log("setting main player", dom);
+				$(".ball").css("background-color", player.color);
+				$(".ball").append(dom);
+				$("#player_tag").append(dom);
+			}
 
 			document.getElementById("player_container").appendChild(dom);
 

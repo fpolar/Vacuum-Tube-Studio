@@ -10,36 +10,22 @@
 
     // Draws a dot at a specific position on the supplied canvas name
     // Parameters are: A canvas context, the x position, the y position, the size of the dot
-    function drawDot(ctx,x,y,size) {
-        // Let's use black by setting RGB values to 0, and 255 alpha (completely opaque)
-        var r=0; var g=0; var b=0; var a=255;
+    function drawDot(x,y,size,color) {
 
         // Select a fill style
-        ctx.fillStyle = "rgba("+r+","+g+","+b+","+(a/255)+")";
+        ctx.fillStyle = color;
 
-        // Draw a filled circle
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI*2, true); 
-        ctx.closePath();
-        ctx.fill();
-        //room.drawDot(ctx,x,y,size);
-    } 
-
-
-    // Draws a dot at a specific position on the supplied canvas name
-    // Parameters are: A canvas context, the x position, the y position, the size of the dot
-    function drawDot(x,y,size,color) {
+        var canvas_width = $("#canvas").width();
+        var canvas_height = $("#canvas").height();
 
         // Select a fill style
         ctx.fillStyle = color;
 
         // Draw a filled circle
         ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI*2, true); 
+        ctx.arc(x*canvas_width, y*canvas_height, size, 0, Math.PI*2, true); 
         ctx.closePath();
         ctx.fill();
-        console.log("drawing - x: "+x+" y: "+y);
-        //room.send({ctx:ctx, x:x, y:y, size:size});
     } 
 
     // Clear the canvas context using the canvas width and height
@@ -124,15 +110,16 @@
         }
     }
 
+    function resizeCanvas(){
+      ctx.canvas.width  = $('#canvas_container').width();
+      ctx.canvas.height = $('#canvas_container').height();
+    }
+
 
     // Set-up the canvas and add our event handlers after the page has loaded
     function canvas_init() {
         // Get the specific canvas element from the HTML document
         canvas = document.getElementById('canvas');
-        
-        $("#canvas_ui").show();
-        $("#buttons").hide();
-        connectToRoom(0);
 
         // If the browser supports the canvas tag, get the 2d drawing context for this canvas
         if (canvas.getContext)
@@ -149,4 +136,11 @@
             canvas.addEventListener('touchstart', sketchpad_touchStart, false);
             canvas.addEventListener('touchmove', sketchpad_touchMove, false);
         }
+
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+        
+        $("#canvas_ui").show();
+        $("#buttons").hide();
+        connectToRoom(0);
     }

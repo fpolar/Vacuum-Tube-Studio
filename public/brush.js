@@ -13,13 +13,13 @@ function brush_init(){
 	ball   = document.querySelector('.ball');
 	garden = document.querySelector('.garden');
 	output = document.querySelector('.output');
-	maxX = garden.clientWidth  - ball.clientWidth;
-	maxY = garden.clientHeight - ball.clientHeight;
+	maxX = $(garden).width();
+	maxY = $(garden).height();
 }
 
 function handleOrientation(event) {
-  var x = event.beta;  // In degree in the range [-180,180]
-  var y = event.gamma; // In degree in the range [-90,90]
+  var x = event.gamma; // In degree in the range [-90,90]
+  var y = event.beta;  // In degree in the range [-180,180]
 
   output.innerHTML  = "beta : " + x + "\n";
   output.innerHTML += "gamma: " + y + "\n";
@@ -34,13 +34,14 @@ function handleOrientation(event) {
   x += 90;
   y += 90;
 
-  // 10 is half the size of the ball
-  // It center the positioning point to the center of the ball
-  ball.style.top  = (maxX*x/180 - 10) + "px";
-  ball.style.left = (maxY*y/180 - 10) + "px";
-
-  xOut = (maxX*x/180 - 10);
-  yOut = (maxY*y/180 - 10);
+  xOut = x/180;
+  yOut = y/180;
   zOut = 10;
   room.send({x:xOut, y:yOut, z:zOut, alpha:event.alpha, beta:event.beta, gamma:event.gamma});
+
+
+  // 10 is half the size of the ball
+  // It center the positioning point to the center of the ball
+  ball.style.left  = (maxX*x/180 - 10) + "px";
+  ball.style.top = (maxY*y/180 - 10) + "px";
 }

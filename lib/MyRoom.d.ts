@@ -1,6 +1,7 @@
 import { Room } from "colyseus";
 import { Schema, MapSchema } from "@colyseus/schema";
 export declare class Player extends Schema {
+    sessionId: string;
     x: number;
     y: number;
     z: number;

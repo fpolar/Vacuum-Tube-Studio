@@ -7,13 +7,16 @@ export declare class Player extends Schema {
     alpha: number;
     beta: number;
     gamma: number;
-    color: number;
+    color: string;
+    emoji: string;
 }
 export declare class State extends Schema {
     players: MapSchema<Player>;
     something: string;
     createPlayer(id: string): void;
     removePlayer(id: string): void;
+    setPlayerEmoji(id: string, data: any): void;
+    setPlayerColor(id: string, data: any): void;
     movePlayer(id: string, movement: any): void;
 }
 export declare class MyRoom extends Room<State> {

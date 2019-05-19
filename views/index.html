@@ -19,27 +19,22 @@
   </head>
   <body>
     <div id="debug"> </div>
-    <script type="text/javascript">
-      window.onerror = function (msg, url, lineNo, columnNo, error) {
-        debugOnSite("ERROR: "+msg+" - "+lineNo+" - "+error);
-      return false;
-    }
-    </script>
     <div id="buttons">
       <button onclick="canvas_init()">Canvas</button>
       <button onclick="brush_init()">Brush</button>
     </div>
-    <div id="sketchpadapp">
-        <div class="leftside">
+    <div id="canvas_ui">
+        <div id="toolbar">
              Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
              Draw something by tapping or dragging.<br/><br/>
              Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
              <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
         </div>
-        <div class="rightside">
-            <canvas id="sketchpad" height="300" width="400">
+        <div id="canvas_container">
+            <canvas id="canvas">
             </canvas>
         </div>
+        <div id="player_container"></div>
     </div>
     <div id="brush_ui">
       <div class="garden">

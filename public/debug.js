@@ -18,3 +18,9 @@ function objectPropertiesString(o){
 	}
 	return out;
 }
+
+
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+	debugOnSite("ERROR: "+msg+" - "+lineNo+" - "+error);
+	return false;
+}

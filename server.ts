@@ -38,14 +38,8 @@ gameServer.onShutdown(function(){
 gameServer.listen(port);
 
 (async function() {
-  	const url = await ngrok.connect(port);
-
+	const url = await ngrok.connect(port);
 	console.log(`Listening on ${ url }`);
 })();
-
-// process.on("uncaughtException", (e) => {
-//   console.log(e.stack);
-//   process.exit(1);
-// });
 
 console.log(`Listening on https://localhost:${ port }`);

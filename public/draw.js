@@ -128,9 +128,9 @@
     // Set-up the canvas and add our event handlers after the page has loaded
     function canvas_init() {
         // Get the specific canvas element from the HTML document
-        canvas = document.getElementById('sketchpad');
+        canvas = document.getElementById('canvas');
         
-        $("#sketchpadapp").show();
+        $("#canvas_ui").show();
         $("#buttons").hide();
         connectToRoom(0);
 

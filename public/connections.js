@@ -1,6 +1,7 @@
+var mobile_debug = false;
 var client, room;
 var players = {};
-var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
+
 
 function connectToRoom(mode){
 
@@ -9,26 +10,41 @@ function connectToRoom(mode){
 	if(url=="localhost"){
 		socket+=window.location.port;
 	}
+
 	client = new Colyseus.Client(socket);
 	client.onError.add(function(err) {
- 		debugOnSite(objectPropertiesString(err));
- 		// debugOnSite(objectPropertiesString(client));
- 		// debugOnSite(client.id);
+		console.log(err);
+ 		if(mobile_debug) debugOnSite(objectPropertiesString(err));
 	});
-	// client.id = "aY_JVTde2"
+
 	room = client.join("my_room");
 
 	room.onJoin.add(function() {
-		debugOnSite(client.id + " joined " + room.name);
+		if(mobile_debug) debugOnSite(client.id + " joined " + room.name);
 	    console.log(client.id, " joined ", room.name);
-	    console.log(room.state);
 		room.state.players.onAdd = function(player, sessionId) {
+			console.log(player);
 	  		var dom = document.createElement("div");
 			dom.className = "player";
-			dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-			dom.innerHTML = "Player " + sessionId;
+			dom.id = sessionId;
+
+			// var bgColor = player.color;
+			// var playerEmoji = player.emoji;
+			// if(playerEmoji == ""){
+			// 	console.log("setting player emoji");
+			// 	playerEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+			// 	room.send({emoji: playerEmoji});
+			// }
+			// if(bgColor == ""){
+			// 	console.log("setting player color");
+			// 	bgColor = colors[Math.floor(Math.random() * colors.length)]
+			// 	room.send({color: bgColor});
+			// }
+			dom.innerHTML = player.emoji;
+			dom.style.background = player.color;
 			players[sessionId] = dom;
-			document.body.appendChild(dom);
+
+			document.getElementById("player_container").appendChild(dom);
 
 			window.addEventListener('deviceorientation', handleOrientation);
 
@@ -38,15 +54,13 @@ function connectToRoom(mode){
 		}
 
 		room.state.players.onRemove = function(player, sessionId) {
-			document.body.removeChild(players[sessionId]);
+			document.getElementById("player_container").removeChild(players[sessionId]);
 			delete players[sessionId];
 		}
 		if(mode == 0){
 			room.state.players.onChange = function (player, sessionId) {
 				var dom = players[sessionId];
-				// dom.style.left = player.x + "px";
-				// dom.style.top = player.y + "px";
-				drawDot(player.x, player.y, player.z, dom.style.background)
+				drawDot(player.x, player.y, player.z, player.color)
 			}
 		}
 	});

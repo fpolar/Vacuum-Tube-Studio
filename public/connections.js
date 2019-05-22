@@ -34,7 +34,7 @@ function connectToRoom(mode){
 			dom.style.background = "rgb("+player.color+")";
 			players[sessionId] = dom;
 
-			if(room.sessionId == sessionId){
+			if(room.sessionId == sessionId && mode==1){
 				main_player = player;
 				console.log("setting main player", dom);
 				$("#ball").css("background-color", "rgb("+player.color+")");
@@ -59,7 +59,7 @@ function connectToRoom(mode){
 		if(mode == 0){
 			room.state.players.onChange = function (player, sessionId) {
 				var dom = players[sessionId];
-				drawDot(player.x, player.y, player.z, "rgb("+player.color+")");
+				drawDot(player.x, player.y, player.z, "rgba("+player.color+", .7)");
 			}
 		}
 	});

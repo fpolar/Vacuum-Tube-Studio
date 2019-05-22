@@ -13,17 +13,17 @@ variables like 'player' or 'score' and why the players are defined by emojis.
 
 The accelerometer readings were very noisy and this led to innacurate renderings of the users motion, 
 but the gyroscope was fairly accurate.
-So I reworked the project into a series of WarioWare-style micro games [include link to other repo] that require less acuracy from the 
+So I reworked the project into a series of WarioWare-style micro games [include link to other repo]() that require less acuracy from the 
 accelerometer and use the gyrometer for drawing simple things
 
 
 Running The Project
 ------------
 
-Download the nodejs (https://nodejs.org/en/)
-Clone the project
-In the command line or terminal:
-	navigate into the project folder
-	run `npm install`
-	run `npm start`
+- Download [nodejs](https://nodejs.org/en/)
+- Clone the project
+- In the command line or terminal:
+- navigate into the project folder
+  - run `npm install`
+  - run `npm start`
 

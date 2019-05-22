@@ -8,16 +8,20 @@
     // Variables to keep track of the touch position
     var touchX,touchY;
 
+    //structures for keeping track of canvas states for undoing TODO
+    var canvasStates = [];
+
+    var canvas_width;
+    var canvas_height;
+
     // Draws a dot at a specific position on the supplied canvas name
     // Parameters are: A canvas context, the x position, the y position, the size of the dot
     function drawDot(x,y,size,color) {
-        console.log("Drawing Dog", x,y, size, color);
+        console.log("Drawing Dot", x,y, size, color);
 
         // Select a fill style
         ctx.fillStyle = color;
 
-        var canvas_width = $("#canvas").width();
-        var canvas_height = $("#canvas").height();
         var min_size = 3;
         var max_size = 40 - min_size;//max size is 40, but for calculations subtract min size here
 
@@ -116,8 +120,11 @@
     }
 
     function resizeCanvas(){
-      ctx.canvas.width  = $('#canvas_container').width();
-      ctx.canvas.height = $('#canvas_container').height();
+        ctx.canvas.width  = $('#canvas_container').width();
+        ctx.canvas.height = $('#canvas_container').height();
+
+        canvas_width = $("#canvas").width();
+        canvas_height = $("#canvas").height();
     }
 
 
@@ -142,10 +149,10 @@
             canvas.addEventListener('touchmove', sketchpad_touchMove, false);
         }
 
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
-        
         $("#canvas_ui").show();
         $("#buttons").hide();
         connectToRoom(0);
+
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
     }

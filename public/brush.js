@@ -51,7 +51,7 @@ function handleOrientation(event) {
   //some math needs to be done to cleanly control size with alpha
   if(z<90){ z = 90 - z}
   else if(z>270){ z = z - 270}
-  else{ z = 0 }
+  else{ z = -1 }
 
   // Because we don't want to have the device upside down
   // We constrain the x value to the range [-90,90]

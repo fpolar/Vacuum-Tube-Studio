@@ -4,18 +4,6 @@ var players = {};
 
 var main_player;
 
-// function adjustButtonCSS(){
-// 	console.log($("#buttons button"), window.innerWidth)
-// 	if(window.innerWidth<400 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-// 		$("#buttons button").css("padding-right", "20vh");
-// 	}else{
-// 		$("#buttons button").css("padding-right", "0");
-// 	}
-// }
-
-// window.addEventListener("load", adjustButtonCSS);
-// window.addEventListener("resize", adjustButtonCSS);
-
 function connectToRoom(mode){
 
 	var url = window.location.hostname;
@@ -46,18 +34,18 @@ function connectToRoom(mode){
 			dom.style.background = "rgb("+player.color+")";
 			players[sessionId] = dom;
 
-			if(room.sessionId == sessionId && mode==1){
+			if(room.sessionId == sessionId){
 				main_player = player;
 				console.log("setting main player", dom);
-				$(".ball").css("background-color", "rgb("+player.color+")");
+				$("#ball").css("background-color", "rgb("+player.color+")");
 				$("html").css("background-color", "rgba("+player.color+", .2)");
 				$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
+
+				window.addEventListener('deviceorientation', handleOrientation);
+				window.addEventListener('devicemotion', handleMotion);
 			}
 
 			document.getElementById("player_container").appendChild(dom);
-
-			window.addEventListener('deviceorientation', handleOrientation);
-			window.addEventListener('devicemotion', handleMotion);
 
 			window.addEventListener("error", function (e) {
 				room.send({error:e.message})
@@ -77,6 +65,3 @@ function connectToRoom(mode){
 	});
 }
 
-function rgbSetAlpha(a){
-
-}

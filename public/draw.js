@@ -22,8 +22,8 @@
         // Select a fill style
         ctx.fillStyle = color;
 
-        var min_size = 3;
-        var max_size = 40 - min_size;//max size is 40, but for calculations subtract min size here
+        var min_size = 5;
+        var max_size = 20 - min_size;//max size is 40, but for calculations subtract min size here
 
         if(size<0){ size = 0; min_size = 0;}
 
@@ -45,7 +45,7 @@
     // Keep track of the mouse button being pressed and draw a dot at current location
     function sketchpad_mouseDown() {
         mouseDown=1;
-        drawDot(ctx,mouseX,mouseY,12);
+        drawDot(mouseX,mouseY,12, main_player.color);
     }
 
     // Keep track of the mouse button being released

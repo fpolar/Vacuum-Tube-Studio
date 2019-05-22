@@ -1,9 +1,9 @@
-var ball   = document.querySelector('.ball');
-var garden = document.querySelector('.garden');
-var output = document.querySelector('.output');
+var ball;
+var garden;
+var output;
 
-var maxX = garden.clientWidth  - ball.clientWidth;
-var maxY = garden.clientHeight - ball.clientHeight;
+var maxX;
+var maxY;
 
 //only one of these should be true at a time 
 //because there is only one div they both write to
@@ -11,15 +11,17 @@ var debugOrientation = false;
 var debugAcceleration = true;
 
 function brush_init(){
- 	$("#buttons").hide();
-	$("#brush_ui").show();
-  connectToRoom(1);
+	ball   = document.querySelector('#ball');
+	garden = document.querySelector('#garden');
+	output = document.querySelector('#output');
 
-	ball   = document.querySelector('.ball');
-	garden = document.querySelector('.garden');
-	output = document.querySelector('.output');
 	maxX = $(garden).width();
 	maxY = $(garden).height();
+
+  $("#buttons").hide();
+  $("#brush_ui").show();
+  connectToRoom(1);
+
 }
 
 function handleMotion(event) {

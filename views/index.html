@@ -11,6 +11,8 @@
 <html lang="en">
   <head>
     <title>Vacuum Tube Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="debug.js"></script>
     <script src="colyseus.js"></script>
@@ -39,6 +41,10 @@
     <div id="brush_ui">
       <div id="garden">
         <div id="ball" style="top: -10px; left: 80px;"></div>
+      </div>
+      <div id="mode_buttons">
+        <button id="touch_button" onclick="enable_touch()">Touch</button>
+        <button id="tilt_button" onclick="enable_tilt()" disabled="true">Tilt</button>
       </div>
       <div id="player_tag"></div>
       <div id="output">beta : -90 <br> gamma: 0 </div>

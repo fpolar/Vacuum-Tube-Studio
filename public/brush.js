@@ -10,6 +10,12 @@ var maxY;
 var debugOrientation = true;
 var debugAcceleration = false;
 
+function resize_garden(){
+  maxX = $(garden).width();
+  maxY = $(garden).height();
+
+}
+
 function brush_init(){
   connectToRoom(1);
   $("#buttons").hide();
@@ -19,8 +25,8 @@ function brush_init(){
   garden = document.querySelector('#garden');
   output = document.querySelector('#output');
 
-  maxX = $(garden).width();
-  maxY = $(garden).height();
+  resize_garden();
+  window.addEventListener("resize", resize_garden);
 }
 
 function handleMotion(event) {
@@ -78,7 +84,43 @@ function handleOrientation(event) {
   // 10 is half the size of the ball
   // It center the positioning point to the center of the ball
   ball.style.left  = (maxX*x/120 - 10) + "px";
-  ball.style.top = (maxY*y/45 - 10) + "px";
+  ball.style.top = (maxY*y/90 - 10) + "px";
   ball.style.width = (5+zOut*20) + "px";
   ball.style.height = (5+zOut*20) + "px";
+}
+
+function handleDraw(event){
+  if(event.touches && event.touches.length == 1) {
+    var touch = event.touches[0];
+    var x = touch.clientX;
+    var y = touch.clientY;
+
+    x = (x - $(garden).position().left)/$(garden).width();
+    y = (y - $(garden).position().top)/$(garden).height();
+
+    room.send({x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
+  }
+}
+
+
+function enable_tilt(){
+  $("#ball").show();
+  $("#touch_button").attr("disabled", false);
+  $("#tilt_button").attr("disabled", true);
+  window.addEventListener('deviceorientation', handleOrientation);
+  window.addEventListener('devicemotion', handleMotion);
+  // stop reacting to touch events on the garden
+  garden.removeEventListener('touchstart', handleDraw, false);
+  garden.removeEventListener('touchmove', handleDraw, false);
+}
+
+function enable_touch(){
+  $("#ball").hide();
+  $("#touch_button").attr("disabled", true);
+  $("#tilt_button").attr("disabled", false);
+  window.removeEventListener('deviceorientation', handleOrientation);
+  window.removeEventListener('devicemotion', handleMotion);
+  // React to touch events on the garden
+  garden.addEventListener('touchstart', handleDraw, false);
+  garden.addEventListener('touchmove', handleDraw, false);
 }

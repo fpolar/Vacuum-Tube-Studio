@@ -23,7 +23,7 @@ Running The Project
 - Download [nodejs](https://nodejs.org/en/)
 - Clone the project
 - In the command line or terminal:
-- navigate into the project folder
+  - navigate into the project folder
   - run `npm install`
   - run `npm start`
 

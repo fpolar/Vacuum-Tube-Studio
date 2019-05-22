@@ -3,6 +3,7 @@
   display:none;
 }
 .garden {
+    background-color: white;
   position: relative;
   width: 80%;
   height: 55vh;
@@ -22,11 +23,6 @@
 }
 
 #player_tag{
-    /*position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 10vh;
-    */
     float:left;
     width: 100%;
     padding: 3% 9% 0 9%;
@@ -34,6 +30,11 @@
 #player_tag .player{
   width: 100%;
   font-size: 20vh;
+}
+.output{
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 .output{
   position: fixed;
@@ -84,9 +85,10 @@
     height: 85vh;
 }
 #canvas_container {
+    background-color: white;
     float:left;
     height:85vh;
-    width:85vw;
+    width:85%;
     border:2px solid #888;
     border-radius:4px;
     position:relative; /* Necessary for correct mouse co-ords in Firefox */

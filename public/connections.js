@@ -27,7 +27,7 @@ function connectToRoom(mode){
 	client = new Colyseus.Client(socket);
 	client.onError.add(function(err) {
 		console.log(err);
- 		if(mobile_debug) debugOnSite(objectPropertiesString(err));
+ 		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));
 	});
 
 	room = client.join("my_room");
@@ -43,19 +43,21 @@ function connectToRoom(mode){
 			dom.className = "player";
 			dom.id = sessionId;
 			dom.innerHTML = player.emoji;
-			dom.style.background = player.color;
+			dom.style.background = "rgb("+player.color+")";
 			players[sessionId] = dom;
 
-			if(room.sessionId == sessionId){
+			if(room.sessionId == sessionId && mode==1){
 				main_player = player;
 				console.log("setting main player", dom);
-				$(".ball").css("background-color", player.color);
-				$("#player_tag").append("<div class='player' style='background:"+player.color+"'>"+player.emoji+"</div>");
+				$(".ball").css("background-color", "rgb("+player.color+")");
+				$("html").css("background-color", "rgba("+player.color+", .2)");
+				$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
 			}
 
 			document.getElementById("player_container").appendChild(dom);
 
 			window.addEventListener('deviceorientation', handleOrientation);
+			window.addEventListener('devicemotion', handleMotion);
 
 			window.addEventListener("error", function (e) {
 				room.send({error:e.message})
@@ -69,8 +71,12 @@ function connectToRoom(mode){
 		if(mode == 0){
 			room.state.players.onChange = function (player, sessionId) {
 				var dom = players[sessionId];
-				drawDot(player.x, player.y, player.z, player.color)
+				drawDot(player.x, player.y, player.z, "rgb("+player.color+")");
 			}
 		}
 	});
+}
+
+function rgbSetAlpha(a){
+
 }

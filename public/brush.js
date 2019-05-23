@@ -41,9 +41,7 @@ function brush_init(){
       // Get the specific canvas element from the HTML document
       canvas = document.getElementById('garden_canvas');
 
-      // If the browser supports the canvas tag, get the 2d drawing context for this canvas
-      if (canvas.getContext)
-          ctx = canvas.getContext('2d');
+      ctx = $("#garden_canvas")[0].getContext('2d');
   }
 
 function handleMotion(event) {
@@ -71,27 +69,25 @@ function handleOrientation(event) {
     output.innerHTML += "gamma: " + x + "<br/>";
   }
 
-  //Since the threshold for alpha is forward on load
-  //some math needs to be done to cleanly control size with alpha
+
+  //clamping the angles to certain values to make controlling the brush
+  //through tilts more conventient to the user, ie they dont have to
+  //bend the phone too extremely, just tilt slightly
   if(z<60){ z = 60 - z}
   else if(z>300){ z = z - 300}
   else{ z = -1 }
 
-  // Because we don't want to have the device upside down
-  // We constrain the x value to the range [-90,90]
   if (x >  60) { x =  60};
   if (x < -60) { x = -60};
 
-  // Because we don't want to have the device upside down
-  // We constrain the x value to the range [-90,90]
   if (y >  45) { y =  45};
   if (y < -45) { y = -45};
 
-  // To make computation easier we shift the range of 
-  // x and y to [0,180]
+  //adding max abs value so there are no negative coordinates
   x += 60;
   y += 45;
 
+  //turning the values into percentages so they can be drawn on any canvas
   xOut = x/120;
   yOut = y/90;
   zOut = z/60;

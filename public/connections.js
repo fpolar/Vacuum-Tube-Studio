@@ -58,7 +58,7 @@ function connectToRoom(mode){
 		}
 		room.state.players.onChange = function (player, sessionId) {
 			var dom = players[sessionId];
-			drawDot(player.x, player.y, player.z, "rgba("+player.color+", .7)");
+			drawDot(player.x, player.y, player.z, "rgba("+player.color+", 1)");
 		}
 	});
 }

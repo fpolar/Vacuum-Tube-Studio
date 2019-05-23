@@ -7,16 +7,18 @@
     var canvas_height;
 
     //variables for drawing on a path instead of dots
-    const draw_path = true;
+    var draw_path = true;
     const redraw_interval = 10;
     var pointsX = [], pointsY = [], sizes = [], redraw_timer = redraw_interval;
 
-    // Draws a dot at a specific position on the supplied canvas name
-    // Parameters are: A canvas ctx, the x position, the y position, the size of the dot
-    function drawDot(x,y,size,color) {
-        console.log("Drawing Dot", x,y, size, color, ctx);
+    function path_toggle(p){
+        draw_path = p;
+        $("#pathbutton").attr("disabled", p);
+        $("#dotbutton").attr("disabled", !p);
+    }
 
-        // Select a fill style
+    function drawDot(x,y,size,color) {
+       // console.log("Drawing Dot", x,y, size, color, ctx);
         ctx.fillStyle = color;
 
         var min_size = 5;
@@ -25,7 +27,6 @@
         if(size<0){ size = 0; min_size = 0;}
 
         if(draw_path){
-            console.log("Drawing Path", color, ctx);
             pointsX.push(x*canvas_width);
             pointsY.push(y*canvas_height);
             sizes.push(min_size+size*(max_size-min_size));
@@ -34,7 +35,6 @@
                 redraw_timer = redraw_interval;
             }
         }else{
-            console.log("Drawing Dot", x,y, size, color, ctx);
             ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(x*canvas_width, y*canvas_height, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 

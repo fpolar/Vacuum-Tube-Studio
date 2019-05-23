@@ -27,7 +27,16 @@
     </div>
     <div id="canvas_ui">
         <div id="toolbar">
-             <input type="submit" value="Clear" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
+            <br/>
+            <b>Brush Type<b>
+            <br/>
+            <br/>
+            <input type="submit" value="Path" id="pathbutton" disabled="true" onclick="path_toggle(true);">
+            <input type="submit" value="Dots" id="dotbutton" onclick="path_toggle(false);">
+            <br/>
+            <hr>
+            <br/>
+            <input type="submit" value="Clear" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
         </div>
         <div id="canvas_container">
             <canvas id="canvas">
@@ -39,7 +48,7 @@
       <div id="garden">
         <canvas id="garden_canvas">
         </canvas>
-        <div id="ball" style="top: -10px; left: 80px;"></div>
+        <div id="ball"></div>
       </div>
       <div id="mode_buttons">
         <button id="touch_button" onclick="enable_touch()">Touch</button>

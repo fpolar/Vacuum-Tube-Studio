@@ -1,6 +1,14 @@
 /*brush style*/
 #brush_ui{
   display:none;
+  /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
+  display: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 #garden {
   background-color: white;
@@ -10,6 +18,12 @@
   margin-left: 9.5%;
   border: 5px solid #CCC;
   border-radius: 10px;
+  z-index: 10;
+}
+
+#garden_canvas{
+  z-index: 1;
+  opacity: .7;
 }
 
 #mode_buttons{
@@ -24,6 +38,7 @@
   height: 20px;
   background: green;
   border-radius: 100%;
+  z-index: 100;
 }
 #mode_buttons{
   padding: 2.5% 10% ;

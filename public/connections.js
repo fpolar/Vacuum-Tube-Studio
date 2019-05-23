@@ -56,11 +56,9 @@ function connectToRoom(mode){
 			document.getElementById("player_container").removeChild(players[sessionId]);
 			delete players[sessionId];
 		}
-		if(mode == 0){
-			room.state.players.onChange = function (player, sessionId) {
-				var dom = players[sessionId];
-				drawDot(player.x, player.y, player.z, "rgba("+player.color+", .7)");
-			}
+		room.state.players.onChange = function (player, sessionId) {
+			var dom = players[sessionId];
+			drawDot(player.x, player.y, player.z, "rgba("+player.color+", .7)");
 		}
 	});
 }

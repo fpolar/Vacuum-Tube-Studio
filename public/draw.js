@@ -9,7 +9,7 @@
     var touchX,touchY;
 
     //structures for keeping track of canvas states for undoing TODO
-    var canvasStates = [];
+    var drawing_steps = [];
 
     var canvas_width;
     var canvas_height;
@@ -36,6 +36,25 @@
         ctx.closePath();
         ctx.fill();
     } 
+
+    function redraw(){
+
+      context.strokeStyle = "#df4b26";
+      context.lineJoin = "round";
+      context.lineWidth = 5;
+                
+      for(var i=0; i < clickX.length; i++) {        
+        context.beginPath();
+        if(clickDrag[i] && i){
+          context.moveTo(clickX[i-1], clickY[i-1]);
+         }else{
+           context.moveTo(clickX[i]-1, clickY[i]);
+         }
+         context.lineTo(clickX[i], clickY[i]);
+         context.closePath();
+         context.stroke();
+      }
+    }
 
     // Clear the canvas context using the canvas width and height
     function clearCanvas(canvas,ctx) {

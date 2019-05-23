@@ -27,9 +27,6 @@
     </div>
     <div id="canvas_ui">
         <div id="toolbar">
-             Touchscreen and mouse support HTML5 canvas sketchpad.<br/><br/>
-             Draw something by tapping or dragging.<br/><br/>
-             Works on iOS, Android and desktop/laptop touchscreens using Chrome/Firefox/Safari.<br/><br/>
              <input type="submit" value="Clear" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
         </div>
         <div id="canvas_container">
@@ -40,6 +37,8 @@
     </div>
     <div id="brush_ui">
       <div id="garden">
+        <canvas id="garden_canvas">
+        </canvas>
         <div id="ball" style="top: -10px; left: 80px;"></div>
       </div>
       <div id="mode_buttons">
@@ -47,7 +46,7 @@
         <button id="tilt_button" onclick="enable_tilt()" disabled="true">Tilt</button>
       </div>
       <div id="player_tag"></div>
-      <div id="output">beta : -90 <br> gamma: 0 </div>
+      <div id="output"></div>
     </div>
     <script src="brush.js"></script>
     <script src="connections.js"></script>

@@ -7,13 +7,18 @@ var maxY;
 
 //only one of these should be true at a time 
 //because there is only one div they both write to
-var debugOrientation = true;
+var debugOrientation = false;
 var debugAcceleration = false;
 
-function resize_garden(){
+function resizeGarden(){
   maxX = $(garden).width();
   maxY = $(garden).height();
 
+  ctx.canvas.width  = $('#garden').width();
+  ctx.canvas.height = $('#garden').height();
+
+  canvas_width = $("#garden_canvas").width();
+  canvas_height = $("#garden_canvas").height();
 }
 
 function brush_init(){
@@ -25,9 +30,21 @@ function brush_init(){
   garden = document.querySelector('#garden');
   output = document.querySelector('#output');
 
-  resize_garden();
-  window.addEventListener("resize", resize_garden);
+  garden_canvas_init();
+  resizeGarden();
+  window.addEventListener("resize", resizeGarden);
 }
+
+
+  // Set-up the canvas in the garden
+  function garden_canvas_init() {
+      // Get the specific canvas element from the HTML document
+      canvas = document.getElementById('garden_canvas');
+
+      // If the browser supports the canvas tag, get the 2d drawing context for this canvas
+      if (canvas.getContext)
+          ctx = canvas.getContext('2d');
+  }
 
 function handleMotion(event) {
     var x = event.accelerationIncludingGravity.x;
@@ -100,6 +117,7 @@ function handleDraw(event){
 
     room.send({x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
   }
+  event.preventDefault();
 }
 
 

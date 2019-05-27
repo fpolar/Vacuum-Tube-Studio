@@ -34,15 +34,16 @@ function connectToRoom(mode){
 			dom.style.background = "rgb("+player.color+")";
 			players[sessionId] = dom;
 
-			if(room.sessionId == sessionId && mode==1){
+			if(room.sessionId == sessionId){
 				main_player = player;
 				console.log("setting main player", dom);
-				$("#ball").css("background-color", "rgb("+player.color+")");
-				$("html").css("background-color", "rgba("+player.color+", .2)");
-				$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
+				if(mode == 1){
+					$("#ball").css("background-color", "rgb("+player.color+")");
+					$("html").css("background-color", "rgba("+player.color+", .2)");
+					$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
 
-				window.addEventListener('deviceorientation', handleOrientation);
-				window.addEventListener('devicemotion', handleMotion);
+					enable_touch();
+				}
 			}
 
 			document.getElementById("player_container").appendChild(dom);
@@ -57,8 +58,24 @@ function connectToRoom(mode){
 			delete players[sessionId];
 		}
 		room.state.players.onChange = function (player, sessionId) {
-			var dom = players[sessionId];
-			drawDot(player.x, player.y, player.z, "rgba("+player.color+", 1)");
+			if(main_player.sessionId != sessionId)
+				drawDot(player.x, player.y, player.z, "rgba("+player.color+", 1)");
+		}
+		room.state.canvas_state.onChange = function (value, state) {
+			console.log('value: ', value);
+			console.log('state: ', state);
+			if(state == 'stop' && value == 1){
+				liftBrush();
+			}
+			if(state == 'path' && value == 1){
+				draw_path = 1;
+			}
+			if(state == 'path' && value == 0){
+				draw_path = 0;
+			}
+			if(state == 'clear' && value == 1){		
+		        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}
 		}
 	});
 }

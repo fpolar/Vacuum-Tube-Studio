@@ -8,17 +8,19 @@
 
     //variables for drawing on a path instead of dots
     var draw_path = true;
-    const redraw_interval = 10;
+    const redraw_interval = 3;
     var pointsX = [], pointsY = [], sizes = [], redraw_timer = redraw_interval;
 
     function path_toggle(p){
         draw_path = p;
         $("#pathbutton").attr("disabled", p);
         $("#dotbutton").attr("disabled", !p);
+        if(draw_path) room.send({canvas_state: 'path'});
+        else room.send({canvas_state: 'dots'});
     }
 
     function drawDot(x,y,size,color) {
-       // console.log("Drawing Dot", x,y, size, color, ctx);
+       console.log("Drawing Dot", x,y, size, color);
         ctx.fillStyle = color;
 
         var min_size = 5;
@@ -43,6 +45,12 @@
         }   
     } 
 
+    function liftBrush(){
+        pointsX = [];
+        pointsY = [];
+        sizes = [];
+    }
+
     function redraw(color){
 
         ctx.strokeStyle = color;
@@ -57,7 +65,6 @@
             ctx.closePath();
             ctx.stroke();
         }
-
         pointsX = [pointsX[pointsX.length-1]];
         pointsY = [pointsY[pointsY.length-1]];
         sizes = [sizes[sizes.length-1]];
@@ -67,6 +74,7 @@
     // Clear the canvas ctx using the canvas width and height
     function clearCanvas(canvas,ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        room.send({canvas_state:'clear'});
     }
 
     function resizeCanvas(){

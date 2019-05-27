@@ -35,3 +35,11 @@ Running The Project
   - paste the ngrok url provided in the terminal into any web browser
     - On desktops, laptops, or smartTVs, click the button with the canvas emoji to enter a room as a host/canvas
     - On mobile devices, tap the button with the brush emoji to enter a room as a painter/player
+
+
+TODO
+-------------------
+
+- To make sure scale of drawing on phone is the same as drawing on canvas, give players a random position on the canvas(maybe this is just done on front end, phone dimensions passed through player object in room onjoin) where all their stuff is proportionately drawn
+
+- Make drawing appearing on phone more responsive

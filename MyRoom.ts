@@ -38,7 +38,10 @@ export class State extends Schema {
     @type({ map: Player })
     players = new MapSchema<Player>();
 
-    something = "This attribute won't be sent to the client-side";
+    //possible values are path, dots, stop, and clear
+
+    @type({ map: 'number' })
+    canvas_state = new MapSchema<'number'>();
 
     createPlayer (id: string) {
         this.players[ id ] = new Player();
@@ -87,13 +90,19 @@ export class State extends Schema {
         if(movement.gamma)
             this.players[ id ].gamma = movement.gamma;
     }
+
+    setCanvasStates(){
+        this.canvas_state['path'] = 1;
+        this.canvas_state['clear'] = 0;
+        this.canvas_state['stop'] = 0;
+    }
 }
 
 export class MyRoom extends Room<State> {
     onInit (options) {
         console.log("MyRoom created!", options);
-
         this.setState(new State());
+        this.state.setCanvasStates();
     }
 
     onJoin (client) {
@@ -103,7 +112,6 @@ export class MyRoom extends Room<State> {
     }
 
     onLeave (client) {
-
         this.state.removePlayer(client.sessionId);
     }
 
@@ -115,6 +123,18 @@ export class MyRoom extends Room<State> {
             this.state.setPlayerColor(client.sessionId, data);
         }else{
             this.state.movePlayer(client.sessionId, data);
+        }
+
+        if(data.canvas_state){
+            if(data.canvas_state == 'dots') {
+                this.state.canvas_state['path'] = 0;
+            }else{
+                this.state.canvas_state[data.canvas_state] = 1;
+                console.log("MyRoom canvas state change", data.canvas_state, ":", this.state.canvas_state[data.canvas_state]);
+            }
+
+            this.state.canvas_state['clear'] = 0;
+            this.state.canvas_state['stop'] = 0;
         }
     }
 

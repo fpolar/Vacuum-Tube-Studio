@@ -112,10 +112,14 @@ function handleDraw(event){
     y = (y - $(garden).position().top)/$(garden).height();
 
     room.send({x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
+    drawDot(x, y, .5, "rgb("+main_player.color+")");
   }
   event.preventDefault();
 }
 
+function doneDrawing(){
+    room.send({canvas_state: 'stop'});
+}
 
 function enable_tilt(){
   $("#ball").show();
@@ -126,6 +130,7 @@ function enable_tilt(){
   // stop reacting to touch events on the garden
   garden.removeEventListener('touchstart', handleDraw, false);
   garden.removeEventListener('touchmove', handleDraw, false);
+  garden.removeEventListener('touchend', doneDrawing, false);
 }
 
 function enable_touch(){
@@ -137,4 +142,5 @@ function enable_touch(){
   // React to touch events on the garden
   garden.addEventListener('touchstart', handleDraw, false);
   garden.addEventListener('touchmove', handleDraw, false);
+  garden.addEventListener('touchend', doneDrawing, false);
 }

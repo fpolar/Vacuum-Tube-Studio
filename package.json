@@ -1,10 +1,7 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
-  "name": "https_test",
-  "version": "0.0.1",
-  "description": "A simple Node app built on Express, instantly up and running.",
+  "name": "Vacuum-Tube_Studio",
+  "version": "0.1.0",
+  "description": "This version of VTS is a simple UI for a host and multiple clients that allows mobile devices to paint on a digital canvas on the host computer using tilt or touch controls.",
   "main": "server.js",
   "scripts": {
     "start": "ts-node server.ts",
@@ -22,18 +19,17 @@
     "node": "8.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/hello-express"
+    "url": "https://github.com/fpolar/Vacuum-Tube-Studio"
   },
   "license": "MIT",
   "keywords": [
     "node",
-    "glitch",
+    "draw",
     "express"
   ],
   "devDependencies": {
     "@colyseus/monitor": "^0.10.0",
-    "https-localhost": "^4.1.0",
     "ts-node": "^8.1.0"
   },
-  "author": ""
+  "author": "Frank Pol"
 }

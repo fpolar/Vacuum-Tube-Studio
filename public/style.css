@@ -2,7 +2,6 @@
 #brush_ui{
   display:none;
   /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
-  display: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -104,7 +103,7 @@
 }
 .player {
   text-align: center;
-  font-size: 3vw;
+  font-size: 4vh;
   width:5%;
   height: 100%;
   overflow: hidden;

@@ -41,7 +41,16 @@ TODO
 -------------------
 
 - To make sure scale of drawing on phone is the same as drawing on canvas, give players a random position on the canvas(maybe this is just done on front end, phone dimensions passed through player object in room onjoin) where all their stuff is proportionately drawn
+  - Client Side Changes
+    - make canvas full screen
+    - emoji/player tag in top left of screen, to orient user to their canvas position
+    - touching the emoji enables tilt controls to move the devices position on the canvas
+  - Host side changes
+  	- no more player tag across the bottom
+  	- player tags/emojis are show on the canvas at their position 
 
 - have a button/make user hold down on the canvas or their icon to draw when on tilt mode
 
 - Tapping on the player tag changes your emoji and color
+
+- try removing all jquery, it may be unnecessary

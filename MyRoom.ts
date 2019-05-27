@@ -16,18 +16,38 @@ export class Player extends Schema {
     vote = 0;
     @type("number")
     score = 0;
+    
+    @type("number")
+    canvas_pos_x = 0;
+    @type("number")
+    canvas_pos_y = 0;
+    
+    @type("number")
+    device_width = 0;
+    @type("number")
+    device_height = 0;
+
     @type("number")
     x = -100;
     @type("number")
     y = -100;
     @type("number")
     z = -100;
+
     @type("number")
     alpha = Math.floor(Math.random() * 400);
     @type("number")
     beta = Math.floor(Math.random() * 400);
     @type("number")
     gamma = Math.floor(Math.random() * 400);
+
+    @type("number")
+    accel_x = Math.floor(Math.random() * 400);
+    @type("number")
+    accel_y = Math.floor(Math.random() * 400);
+    @type("number")
+    accel_z = Math.floor(Math.random() * 400);
+
     @type("string")
     color = colors[Math.floor(Math.random() * colors.length)];
     @type("string")
@@ -79,16 +99,11 @@ export class State extends Schema {
             this.players[ id ].y = movement.y
         if(movement.z)
             this.players[ id ].z = movement.z
-        /*
-        the directions might not be necessary since the calculations are 
-        done on the client side and I may introduce devicemovement(acceleration)
-        */
-        if(movement.alpha)
-            this.players[ id ].alpha = movement.alpha;
-        if(movement.beta)
-            this.players[ id ].beta = movement.beta;
-        if(movement.gamma)
-            this.players[ id ].gamma = movement.gamma;
+        
+        if(movement.canvas_pos_x)
+            this.players[ id ].canvas_pos_x = movement.canvas_pos_x;
+        if(movement.canvas_pos_x)
+            this.players[ id ].canvas_pos_y = movement.canvas_pos_y;
     }
 
     setCanvasStates(){

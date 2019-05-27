@@ -38,7 +38,6 @@ function connectToRoom(mode){
 				main_player = player;
 				console.log("setting main player", dom);
 				if(mode == 1){
-					$("#ball").css("background-color", "rgb("+player.color+")");
 					$("html").css("background-color", "rgba("+player.color+", .2)");
 					$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
 
@@ -46,7 +45,7 @@ function connectToRoom(mode){
 				}
 			}
 
-			document.getElementById("player_container").appendChild(dom);
+			document.getElementById("canvas_container").appendChild(dom);
 
 			window.addEventListener("error", function (e) {
 				room.send({error:e.message})
@@ -54,12 +53,18 @@ function connectToRoom(mode){
 		}
 
 		room.state.players.onRemove = function(player, sessionId) {
-			document.getElementById("player_container").removeChild(players[sessionId]);
+			document.getElementById("canvas_container").removeChild(players[sessionId]);
 			delete players[sessionId];
 		}
 		room.state.players.onChange = function (player, sessionId) {
 			if(main_player.sessionId != sessionId)
 				drawDot(player.x, player.y, player.z, "rgba("+player.color+", 1)");
+
+			//may need to find a more efficient way to do this if it makes drawing less responsive
+			if(player.canvas_pos_x != players[sessionId].offsetLeft || player.canvas_pos_y != players[sessionId].offsetTop ){
+				players[sessionId].offsetLeft = player.canvas_pos_x * canvas.offsetWidth;
+				players[sessionId].offsetTop = player.canvas_pos_y * canvas.offsetHeight;
+			}
 		}
 		room.state.canvas_state.onChange = function (value, state) {
 			console.log('value: ', value);

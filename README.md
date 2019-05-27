@@ -43,3 +43,5 @@ TODO
 - To make sure scale of drawing on phone is the same as drawing on canvas, give players a random position on the canvas(maybe this is just done on front end, phone dimensions passed through player object in room onjoin) where all their stuff is proportionately drawn
 
 - have a button/make user hold down on the canvas or their icon to draw when on tilt mode
+
+- Tapping on the player tag changes your emoji and color

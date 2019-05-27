@@ -118,6 +118,7 @@ function handleDraw(event){
 }
 
 function doneDrawing(){
+    liftBrush();
     room.send({canvas_state: 'stop'});
 }
 

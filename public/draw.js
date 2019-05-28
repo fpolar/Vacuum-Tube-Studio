@@ -20,7 +20,6 @@
     }
 
     function drawDot(x,y,size,color) {
-       console.log("Drawing Dot", x,y, size, color);
         ctx.fillStyle = color;
 
         var min_size = 5;
@@ -40,6 +39,34 @@
             ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(x*canvas_width, y*canvas_height, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
+            ctx.closePath();
+            ctx.fill();
+        }   
+    } 
+
+    function drawDotExplicitPosition(x,y,size,color) {
+        ctx.fillStyle = color;
+
+        var min_size = 5;
+        var max_size = 20; 
+
+        console.log(x, y);
+        if(x<0 || y < 0) return;
+        
+        if(size<0){ size = 0; min_size = 0;}
+
+        if(draw_path){
+            pointsX.push(x);
+            pointsY.push(y);
+            sizes.push(min_size+size*(max_size-min_size));
+            if(--redraw_timer == 0){
+                redraw(color);
+                redraw_timer = redraw_interval;
+            }
+        }else{
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
             ctx.closePath();
             ctx.fill();
         }   
@@ -88,15 +115,16 @@
 
     // Set-up the canvas and add our event handlers after the page has loaded
     function canvas_init() {
+        $("#canvas_ui").show();
+        $("#buttons").hide();
         // Get the specific canvas element from the HTML document
         canvas = document.getElementById('canvas');
 
         ctx = $("#canvas")[0].getContext('2d');
 
-        $("#canvas_ui").show();
-        $("#buttons").hide();
-        connectToRoom(0);
-
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
+
+        connectToRoom(0);
+
     }

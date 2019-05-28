@@ -40,17 +40,21 @@ Running The Project
 TODO
 -------------------
 
-- To make sure scale of drawing on phone is the same as drawing on canvas, give players a random position on the canvas(maybe this is just done on front end, phone dimensions passed through player object in room onjoin) where all their stuff is proportionately drawn
-  - Client Side Changes
-    - make canvas full screen
-    - emoji/player tag in top left of screen, to orient user to their canvas position
-    - touching the emoji enables tilt controls to move the devices position on the canvas
-  - Host side changes
-  	- no more player tag across the bottom
-  	- player tags/emojis are show on the canvas at their position 
+- Tilt controls can feel a little awkward because of the small space u can move using it
+  - finesse the values to make it feel tighter
+
+- drawing on client side way better than what it sends, fix that 
+  - it may just be a speed issue, drawing a little slowly works fine
+    - this might be ok, people draw slowly when on mobile
+  - sometimes just switching to dots only fixes it for some reason
+
+- small bug, if orientation data sent too early, position of player on canvas isnt set
+
+- right now, all clients draw all other clients when signal recieved.
+  - check if incoming client signal position is within current clients view, if not dont draw
+
+- stop canvas clear on resize
 
 - have a button/make user hold down on the canvas or their icon to draw when on tilt mode
-
-- Tapping on the player tag changes your emoji and color
 
 - try removing all jquery, it may be unnecessary

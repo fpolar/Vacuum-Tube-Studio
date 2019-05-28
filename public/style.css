@@ -129,6 +129,8 @@
   border-radius: 100%;
   -webkit-animation: none;
   animation: none;
+  font-size: 35px;
+  text-align: center;
 }
 
 #canvas {

@@ -46,15 +46,12 @@
     </div>
     <div id="brush_ui">
       <div id="garden">
+        <div id="player_tag" onclick="toggle_tilt()"></div>
+        <div id="tilt_message"> Tilt your device to move your drawing position on the canvas! </div>
         <canvas id="garden_canvas">
         </canvas>
         <div id="ball"></div>
       </div>
-      <div id="mode_buttons">
-        <button id="touch_button" onclick="enable_touch()">Touch</button>
-        <button id="tilt_button" onclick="enable_tilt()" disabled="true">Tilt</button>
-      </div>
-      <div id="player_tag"></div>
       <div id="output"></div>
     </div>
     <script src="brush.js"></script>

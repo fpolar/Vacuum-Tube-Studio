@@ -5,27 +5,30 @@ var output;
 var maxX;
 var maxY;
 
+var tilting = false;
+
 //only one of these should be true at a time 
 //because there is only one div they both write to
 var debugOrientation = false;
 var debugAcceleration = false;
 
 function resizeGarden(){
-  maxX = $(garden).width();
-  maxY = $(garden).height();
+  maxX = garden.offsetWidth;
+  maxY = garden.offsetHeight;
 
-  ctx.canvas.width  = $('#garden').width();
-  ctx.canvas.height = $('#garden').height();
+  //subtract 10 from each for the border of the garden
+  ctx.canvas.width  = maxX;
+  ctx.canvas.height = maxY;
 
-  canvas_width = $("#garden_canvas").width();
-  canvas_height = $("#garden_canvas").height();
+  canvas_width = canvas.offsetWidth;
+  canvas_height = canvas.offsetHeight;
+  console.log(room);
+  if(room) room.send({state:'tilt', device_width:maxX, device_height:maxY});
 }
 
 function brush_init(){
-  connectToRoom(1);
   $("#buttons").hide();
   $("#brush_ui").show();
-
   ball   = document.querySelector('#ball');
   garden = document.querySelector('#garden');
   output = document.querySelector('#output');
@@ -33,6 +36,8 @@ function brush_init(){
   garden_canvas_init();
   resizeGarden();
   window.addEventListener("resize", resizeGarden);
+
+  connectToRoom(1);
 }
 
 
@@ -91,15 +96,7 @@ function handleOrientation(event) {
   xOut = x/120;
   yOut = y/90;
   zOut = z/60;
-  room.send({x:xOut, y:yOut, z:zOut, alpha:event.alpha, beta:event.beta, gamma:event.gamma});
-
-
-  // 10 is half the size of the ball
-  // It center the positioning point to the center of the ball
-  ball.style.left  = (maxX*x/120 - 10) + "px";
-  ball.style.top = (maxY*y/90 - 10) + "px";
-  ball.style.width = (5+zOut*20) + "px";
-  ball.style.height = (5+zOut*20) + "px";
+  room.send({state:'tilt', canvas_pos_x:xOut, canvas_pos_y:yOut});
 }
 
 function handleDraw(event){
@@ -108,40 +105,53 @@ function handleDraw(event){
     var x = touch.clientX;
     var y = touch.clientY;
 
-    x = (x - $(garden).position().left)/$(garden).width();
-    y = (y - $(garden).position().top)/$(garden).height();
+    x = (x - garden.offsetLeft)/canvas.offsetWidth;
+    y = (y - garden.offsetTop)/canvas.offsetHeight;
 
-    room.send({x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
     drawDot(x, y, .5, "rgb("+main_player.color+")");
+    room.send({state:'draw', x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
   }
   event.preventDefault();
 }
 
 function doneDrawing(){
-    liftBrush();
-    room.send({canvas_state: 'stop'});
+  liftBrush();
+  room.send({state:'stop'});
+}
+
+//call funcs that add and remove listeners for new control type and start or stop animations
+function toggle_tilt(){
+  console.log("toggle tilt");
+  if(tilting){
+    enable_touch();
+    document.getElementById("tilt_message").style.display = "none";
+    document.getElementById("player_tag").style.WebkitAnimation = "none";
+    document.getElementById("player_tag").style.animation = "none";
+  }else{
+    enable_tilt();
+    //TODO animate icon somehow
+    document.getElementById("tilt_message").style.display = "block";
+    document.getElementById("player_tag").style.WebkitAnimation = "pulse 2s ease-in-out infinite";
+    document.getElementById("player_tag").style.animation = "pulse 2s ease-in-out infinite";
+  }
+  tilting = !tilting;
 }
 
 function enable_tilt(){
-  $("#ball").show();
-  $("#touch_button").attr("disabled", false);
-  $("#tilt_button").attr("disabled", true);
   window.addEventListener('deviceorientation', handleOrientation);
   window.addEventListener('devicemotion', handleMotion);
   // stop reacting to touch events on the garden
-  garden.removeEventListener('touchstart', handleDraw, false);
-  garden.removeEventListener('touchmove', handleDraw, false);
-  garden.removeEventListener('touchend', doneDrawing, false);
+  canvas.removeEventListener('touchstart', handleDraw, false);
+  canvas.removeEventListener('touchmove', handleDraw, false);
+  canvas.removeEventListener('touchend', doneDrawing, false);
 }
 
 function enable_touch(){
-  $("#ball").hide();
-  $("#touch_button").attr("disabled", true);
-  $("#tilt_button").attr("disabled", false);
+  // room.send({state:'draw'});
   window.removeEventListener('deviceorientation', handleOrientation);
   window.removeEventListener('devicemotion', handleMotion);
   // React to touch events on the garden
-  garden.addEventListener('touchstart', handleDraw, false);
-  garden.addEventListener('touchmove', handleDraw, false);
-  garden.addEventListener('touchend', doneDrawing, false);
+  canvas.addEventListener('touchstart', handleDraw, false);
+  canvas.addEventListener('touchmove', handleDraw, false);
+  canvas.addEventListener('touchend', doneDrawing, false);
 }

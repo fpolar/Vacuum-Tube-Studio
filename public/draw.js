@@ -2,10 +2,6 @@
     // Variables for referencing the canvas and 2dcanvas ctx
     var canvas,ctx;
 
-    //variables for dynamically resizing the canvases
-    var canvas_width;
-    var canvas_height;
-
     //variables for drawing on a path instead of dots
     var draw_path = true;
     const redraw_interval = 3;
@@ -13,14 +9,13 @@
 
     function path_toggle(p){
         draw_path = p;
-        $("#pathbutton").attr("disabled", p);
-        $("#dotbutton").attr("disabled", !p);
+        document.getElementById("pathbutton").disabled = !draw_path;
+        document.getElementById("dotbutton").disabled = draw_path;
         if(draw_path) room.send({canvas_state: 'path'});
         else room.send({canvas_state: 'dots'});
     }
 
     function drawDot(x,y,size,color) {
-       console.log("Drawing Dot", x,y, size, color);
         ctx.fillStyle = color;
 
         var min_size = 5;
@@ -29,8 +24,8 @@
         if(size<0){ size = 0; min_size = 0;}
 
         if(draw_path){
-            pointsX.push(x*canvas_width);
-            pointsY.push(y*canvas_height);
+            pointsX.push(x*canvas.offsetWidth);
+            pointsY.push(y*canvas.offsetHeight);
             sizes.push(min_size+size*(max_size-min_size));
             if(--redraw_timer == 0){
                 redraw(color);
@@ -39,7 +34,35 @@
         }else{
             ctx.fillStyle = color;
             ctx.beginPath();
-            ctx.arc(x*canvas_width, y*canvas_height, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
+            ctx.arc(x*canvas.offsetWidth, y*canvas.offsetHeight, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
+            ctx.closePath();
+            ctx.fill();
+        }   
+    } 
+
+    function drawDotExplicitPosition(x,y,size,color) {
+        ctx.fillStyle = color;
+
+        var min_size = 5;
+        var max_size = 20; 
+
+        console.log(x, y);
+        if(x<0 || y < 0) return;
+        
+        if(size<0){ size = 0; min_size = 0;}
+
+        if(draw_path){
+            pointsX.push(x);
+            pointsY.push(y);
+            sizes.push(min_size+size*(max_size-min_size));
+            if(--redraw_timer == 0){
+                redraw(color);
+                redraw_timer = redraw_interval;
+            }
+        }else{
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
             ctx.closePath();
             ctx.fill();
         }   
@@ -78,25 +101,23 @@
     }
 
     function resizeCanvas(){
-        ctx.canvas.width  = $('#canvas_container').width();
-        ctx.canvas.height = $('#canvas_container').height();
-
-        canvas_width = $("#canvas").width();
-        canvas_height = $("#canvas").height();
+        ctx.canvas.width  = document.getElementById("canvas_container").offsetWidth;
+        ctx.canvas.height = document.getElementById("canvas_container").offsetHeight;
     }
 
 
     // Set-up the canvas and add our event handlers after the page has loaded
     function canvas_init() {
+        $("#canvas_ui").show();
+        $("#buttons").hide();
         // Get the specific canvas element from the HTML document
         canvas = document.getElementById('canvas');
 
         ctx = $("#canvas")[0].getContext('2d');
 
-        $("#canvas_ui").show();
-        $("#buttons").hide();
-        connectToRoom(0);
-
         resizeCanvas();
         window.addEventListener("resize", resizeCanvas);
+
+        connectToRoom(0);
+
     }

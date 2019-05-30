@@ -12,22 +12,42 @@ var emojis = [
 export class Player extends Schema {
     @type("string")
     sessionId = "";
-    @type("number")
-    vote = 0;
+    @type("string")
+    state = 'init'; //draw, tilt, stop
     @type("number")
     score = 0;
+    
+    @type("number")
+    canvas_pos_x = Math.random() ;
+    @type("number")
+    canvas_pos_y = Math.random() ;
+    
+    @type("number")
+    device_width = 0;
+    @type("number")
+    device_height = 0;
+
     @type("number")
     x = -100;
     @type("number")
     y = -100;
     @type("number")
     z = -100;
+
     @type("number")
     alpha = Math.floor(Math.random() * 400);
     @type("number")
     beta = Math.floor(Math.random() * 400);
     @type("number")
     gamma = Math.floor(Math.random() * 400);
+
+    @type("number")
+    accel_x = Math.floor(Math.random() * 400);
+    @type("number")
+    accel_y = Math.floor(Math.random() * 400);
+    @type("number")
+    accel_z = Math.floor(Math.random() * 400);
+
     @type("string")
     color = colors[Math.floor(Math.random() * colors.length)];
     @type("string")
@@ -37,6 +57,12 @@ export class Player extends Schema {
 export class State extends Schema {
     @type({ map: Player })
     players = new MapSchema<Player>();
+
+    @type("number")
+    host_canvas_width = -1;
+
+    @type("number")
+    host_canvas_height = -1;
 
     //possible values are path, dots, stop, and clear
 
@@ -62,6 +88,10 @@ export class State extends Schema {
         delete this.players[ id ];
     }
 
+    setPlayerState(id: string, state: string){
+        this.players[ id ].state = state;
+    }
+
     setPlayerEmoji(id: string, data: any){
         if(data.emoji)
             this.players[ id ].emoji = data.emoji;
@@ -72,29 +102,30 @@ export class State extends Schema {
             this.players[ id ].color = data.color;
     }
 
+    setPlayerDeviceDim(id: string, data: any){
+        if(data.device_width)
+            this.players[ id ].device_width = data.device_width;
+        if(data.device_height)
+            this.players[ id ].device_height = data.device_height;
+    }
+
     movePlayer (id: string, movement: any) {
         if(movement.x)
-            this.players[ id ].x = movement.x
+            this.players[ id ].x = movement.x;
         if(movement.y)
-            this.players[ id ].y = movement.y
+            this.players[ id ].y = movement.y;
         if(movement.z)
-            this.players[ id ].z = movement.z
-        /*
-        the directions might not be necessary since the calculations are 
-        done on the client side and I may introduce devicemovement(acceleration)
-        */
-        if(movement.alpha)
-            this.players[ id ].alpha = movement.alpha;
-        if(movement.beta)
-            this.players[ id ].beta = movement.beta;
-        if(movement.gamma)
-            this.players[ id ].gamma = movement.gamma;
+            this.players[ id ].z = movement.z;
+        
+        if(movement.canvas_pos_x)
+            this.players[ id ].canvas_pos_x = movement.canvas_pos_x;
+        if(movement.canvas_pos_x)
+            this.players[ id ].canvas_pos_y = movement.canvas_pos_y;
     }
 
     setCanvasStates(){
         this.canvas_state['path'] = 1;
         this.canvas_state['clear'] = 0;
-        this.canvas_state['stop'] = 0;
     }
 }
 
@@ -119,22 +150,37 @@ export class MyRoom extends Room<State> {
         console.log("MyRoom received message from", client.sessionId, ":", data);
         if(data.emoji){
             this.state.setPlayerEmoji(client.sessionId, data);
-        } else if(data.color){
+        } 
+
+        if(data.color){
             this.state.setPlayerColor(client.sessionId, data);
-        }else{
+        }
+
+        if(data.device_width){
+            this.state.setPlayerDeviceDim(client.sessionId, data);
+        }
+
+        if (data.x || data.canvas_pos_x){
             this.state.movePlayer(client.sessionId, data);
+        }
+
+        if(data.state){
+            this.state.setPlayerState(client.sessionId, data.state);
+        }
+
+        if(data.host_canvas_width){
+            this.state.host_canvas_width = data.host_canvas_width;
+            this.state.host_canvas_height = data.host_canvas_height;
         }
 
         if(data.canvas_state){
             if(data.canvas_state == 'dots') {
                 this.state.canvas_state['path'] = 0;
-            }else{
-                this.state.canvas_state[data.canvas_state] = 1;
-                console.log("MyRoom canvas state change", data.canvas_state, ":", this.state.canvas_state[data.canvas_state]);
+            }else if(data.canvas_state == 'path') {
+                this.state.canvas_state['path'] = 1;
+            }else if(data.canvas_state == 'clear'){
+                this.state.canvas_state['clear'] = 1;
             }
-
-            this.state.canvas_state['clear'] = 0;
-            this.state.canvas_state['stop'] = 0;
         }
     }
 

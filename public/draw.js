@@ -2,10 +2,6 @@
     // Variables for referencing the canvas and 2dcanvas ctx
     var canvas,ctx;
 
-    //variables for dynamically resizing the canvases
-    var canvas_width;
-    var canvas_height;
-
     //variables for drawing on a path instead of dots
     var draw_path = true;
     const redraw_interval = 3;
@@ -13,8 +9,8 @@
 
     function path_toggle(p){
         draw_path = p;
-        $("#pathbutton").attr("disabled", p);
-        $("#dotbutton").attr("disabled", !p);
+        document.getElementById("pathbutton").disabled = !draw_path;
+        document.getElementById("dotbutton").disabled = draw_path;
         if(draw_path) room.send({canvas_state: 'path'});
         else room.send({canvas_state: 'dots'});
     }
@@ -28,8 +24,8 @@
         if(size<0){ size = 0; min_size = 0;}
 
         if(draw_path){
-            pointsX.push(x*canvas_width);
-            pointsY.push(y*canvas_height);
+            pointsX.push(x*canvas.offsetWidth);
+            pointsY.push(y*canvas.offsetHeight);
             sizes.push(min_size+size*(max_size-min_size));
             if(--redraw_timer == 0){
                 redraw(color);
@@ -38,7 +34,7 @@
         }else{
             ctx.fillStyle = color;
             ctx.beginPath();
-            ctx.arc(x*canvas_width, y*canvas_height, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
+            ctx.arc(x*canvas.offsetWidth, y*canvas.offsetHeight, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
             ctx.closePath();
             ctx.fill();
         }   
@@ -105,11 +101,8 @@
     }
 
     function resizeCanvas(){
-        ctx.canvas.width  = $('#canvas_container').width();
-        ctx.canvas.height = $('#canvas_container').height();
-
-        canvas_width = $("#canvas").width();
-        canvas_height = $("#canvas").height();
+        ctx.canvas.width  = document.getElementById("canvas_container").offsetWidth;
+        ctx.canvas.height = document.getElementById("canvas_container").offsetHeight;
     }
 
 

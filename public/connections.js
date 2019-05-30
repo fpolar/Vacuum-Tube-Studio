@@ -111,14 +111,6 @@ function addNewPlayer(player, sessionId){
 		}
 	}
 
-	// if(isHost){
-	// 	console.log("placing player on canvas", room.state.host_canvas_width, player.device_width, player.canvas_pos_x);
-	// 	// dom.style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
-	// 	// dom.style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
-	// 	dom.style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
-	// 	dom.style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
-	// }
-
 	console.log("adding player", dom);
 	document.getElementById("canvas_container").appendChild(dom);
 	players[sessionId] = dom;

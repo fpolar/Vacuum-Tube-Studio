@@ -99,24 +99,24 @@ function handleOrientation(event) {
   room.send({state:'tilt', canvas_pos_x:xOut, canvas_pos_y:yOut});
 }
 
-function doneDrawing(){
-  liftBrush();
-  room.send({state:'stop'});
-}
-
 function handleDraw(event){
   if(event.touches && event.touches.length == 1) {
     var touch = event.touches[0];
     var x = touch.clientX;
     var y = touch.clientY;
 
-    x = (x - $(garden).position().left)/$(garden).width();
-    y = (y - $(garden).position().top)/$(garden).height();
+    x = (x - garden.offsetLeft)/canvas.offsetWidth;
+    y = (y - garden.offsetTop)/canvas.offsetHeight;
 
     drawDot(x, y, .5, "rgb("+main_player.color+")");
     room.send({state:'draw', x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
   }
   event.preventDefault();
+}
+
+function doneDrawing(){
+  liftBrush();
+  room.send({state:'stop'});
 }
 
 //call funcs that add and remove listeners for new control type and start or stop animations

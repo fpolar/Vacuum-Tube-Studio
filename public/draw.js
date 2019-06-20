@@ -69,6 +69,7 @@
     } 
 
     function liftBrush(){
+        redraw(main_player.color);
         pointsX = [];
         pointsY = [];
         sizes = [];

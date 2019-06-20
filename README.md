@@ -41,6 +41,8 @@ TODO
 -------------------
 - use just orientation and thick or thick mode to paint from user in one spot
 
+- pictionary meets heads up
+
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.
   - maybe keep track of all 'dots' drawn so they can be redrawn on join?
@@ -55,7 +57,7 @@ if they're in a spot on the canvas where they should be able to.
   - finesse the values to make it feel tighter
 
 - drawing on client side way better than what it sends, fix that 
-  - it may just be a speed issue, drawing a little slowly works fine
+  - it may just be a speed/latency issue, drawing a little slowly works fine
     - this might be ok, people draw slowly when on mobile
   - sometimes just switching to dots only fixes it for some reason
 

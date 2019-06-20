@@ -115,6 +115,7 @@ function handleDraw(event){
 }
 
 function doneDrawing(){
+  room.send({state:'draw'});
   liftBrush();
   room.send({state:'stop'});
 }
@@ -138,6 +139,7 @@ function toggle_tilt(){
 }
 
 function enable_tilt(){
+  clearCanvas(garden, ctx);
   window.addEventListener('deviceorientation', handleOrientation);
   window.addEventListener('devicemotion', handleMotion);
   // stop reacting to touch events on the garden

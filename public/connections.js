@@ -1,4 +1,4 @@
-var mobile_debug = true;
+var mobile_debug = false;
 var client, room;
 var players = {};
 
@@ -26,6 +26,8 @@ function connectToRoom(mode){
 	
 	console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
 
+	debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
+
 	//rejoin or join
 	if(getCookie('deviceid') != "" && 
 		getCookie('deviceid') != "undefined" &&
@@ -45,7 +47,9 @@ function connectToRoom(mode){
 }
 
 function setupPlayerConnections(){
-	deviceId = {sessionId: room.sessionId};
+	if(deviceid == {}){
+		deviceId = {sessionId: room.sessionId};
+	}
 	room.state.players.onAdd = function(player, sessionId) {
 		// console.log(client, sessionId, player);
 
@@ -72,7 +76,7 @@ function setupPlayerConnections(){
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
-		if(player.state == 'draw' && deviceId != sessionId){
+		if(player.state == 'draw' && main_player.sessionId != sessionId){
 			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);
 			var explicit_pos_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x + player.x*player.device_width;
 			var explicit_pos_y = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y + player.y*player.device_height;
@@ -117,15 +121,12 @@ function addNewPlayer(player, sessionId){
 	if(room.sessionId == sessionId){
 		main_player = player;
 		setCookie('deviceid', room.sessionId, reconnectMilli);
-		// window.onbeforeunload = function(){
-	 //  		setCookie('exittime', date.getTime(), reconnectMilli);
-		// };
-		// document.onpagehide = function(){
-	 //  		setCookie('exittime', date.getTime(), reconnectMilli);
-		// };
+
 		window.onunload = function(){
+			setCookie('deviceid', room.sessionId, reconnectMilli);
 	  		setCookie('exittime', date.getTime(), reconnectMilli);
 		};
+		
 		if(!isHost){
 			resizeGarden();
 			$("html").css("background-color", "rgba("+player.color+", .2)");

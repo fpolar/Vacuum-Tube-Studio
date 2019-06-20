@@ -39,6 +39,7 @@ Running The Project
 
 TODO
 -------------------
+- use just orientation and thick or thick mode to paint from user in one spot
 
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.

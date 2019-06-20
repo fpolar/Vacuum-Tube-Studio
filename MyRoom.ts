@@ -12,6 +12,8 @@ var emojis = [
 export class Player extends Schema {
     @type("string")
     sessionId = "";
+    @type("boolean")
+    connected = true;
     @type("string")
     state = 'init'; //draw, tilt, stop
     @type("number")
@@ -142,8 +144,29 @@ export class MyRoom extends Room<State> {
         console.log(client.sessionId + " Joined MyRoom");
     }
 
-    onLeave (client) {
+
+    async onLeave (client, consented: boolean) {
+      // flag client as inactive for other users
+      this.state.players[client.sessionId].connected = false;
+
+      try {
+        if (consented) {
+            throw new Error("consented leave");
+        }
+
+        // allow disconnected client to rejoin into this room until 20 seconds
+        await this.allowReconnection(client, 10);
+
+        // client returned! let's re-activate it.
+        this.state.players[client.sessionId].connected = true;
+        console.log("client reconnected! "+client.sessionId);
+
+      } catch (e) {
+
+        // 52 seconds expired. let's remove the client.
         this.state.removePlayer(client.sessionId);
+        console.log("client left for good! "+client.sessionId);
+      }
     }
 
     onMessage (client, data) {

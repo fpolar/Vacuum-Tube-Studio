@@ -150,7 +150,11 @@ function enable_tilt(){
 }
 
 function enable_touch(){
-  // room.send({state:'draw'});
+  //make sure a player who was guessing last round and isn't now can see the canvas
+  document.getElementById("garden_canvas").style.display = 'block';
+  document.getElementById("player_selector").style.display = 'none';
+  // resizeGarden();
+  // stop reacting to orientation and movement events
   window.removeEventListener('deviceorientation', handleOrientation);
   window.removeEventListener('devicemotion', handleMotion);
   // React to touch events on the garden

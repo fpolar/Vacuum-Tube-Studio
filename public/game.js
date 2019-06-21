@@ -14,3 +14,14 @@ function setPlayerWaiting(){
 function startGame(){
 	room.send({})
 }
+
+//should setup guess div in garden, fill with players, set word div to ???
+//and disable the canvas touch maybe, idk if that last one is necessary
+function initGuess(){
+	document.getElementById("garden_canvas").style.display = 'none';
+
+	//fill player selector div
+	//set the onclick for player selector
+
+	document.getElementById("player_selector").style.display = 'block';
+}

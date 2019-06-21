@@ -30,6 +30,12 @@
   opacity: .7;
 }
 
+#player_selector{
+  display: none;
+  height: 100%;
+  width: 100%;
+}
+
 #message{
   display: none;
   z-index: 102;

@@ -76,6 +76,12 @@ function setupPlayerConnections(){
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
+		if(player.state == 'ready' && main_player.sessionId == sessionId){
+			enable_touch();
+		}
+		if(player.state == 'guess' && main_player.sessionId == sessionId){
+			initGuess();
+		}
 		if(player.state == 'draw' && main_player.sessionId != sessionId){
 			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);
 			var explicit_pos_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x + player.x*player.device_width;

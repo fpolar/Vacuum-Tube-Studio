@@ -43,6 +43,8 @@ TODO
 
 - pictionary meets heads up
 
+- big reveal of word animating towards screen(getting bigger) and fading out
+
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.
   - maybe keep track of all 'dots' drawn so they can be redrawn on join?
@@ -76,3 +78,5 @@ if they're in a spot on the canvas where they should be able to.
   - change emoji/color(most likely not let them select, just a randomiztion button)
 
 - try removing all jquery, it may be unnecessary
+
+- use let instead of var when necessary

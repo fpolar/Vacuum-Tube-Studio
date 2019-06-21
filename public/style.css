@@ -30,7 +30,7 @@
   opacity: .7;
 }
 
-#tilt_message{
+#message{
   display: none;
   z-index: 102;
   position: absolute;
@@ -49,6 +49,20 @@
   border-radius: 100%;
   -webkit-animation: none;
   animation: none;
+}
+#text{
+  position: absolute;
+  width: 85%;
+  margin: 20px 7.45% 9.5vh 7.45%;
+  padding: 2px 10px;
+  border: 5px solid #CCC;
+  border-radius: 5px;
+}
+.score{
+  float: right;
+}
+#word{
+  float: left;
 }
 #player_tag .player{
   width: 100%;

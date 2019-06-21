@@ -15,7 +15,7 @@ export class Player extends Schema {
     @type("boolean")
     connected = true;
     @type("string")
-    state = 'init'; //draw, tilt, stop
+    state = 'init'; //draw, tilt, stop, guess, wait
     @type("number")
     score = 0;
     
@@ -65,8 +65,6 @@ export class State extends Schema {
 
     @type("number")
     host_canvas_height = -1;
-
-    //possible values are path, dots, stop, and clear
 
     @type({ map: 'number' })
     canvas_state = new MapSchema<'number'>();
@@ -128,6 +126,11 @@ export class State extends Schema {
     setCanvasStates(){
         this.canvas_state['path'] = 1;
         this.canvas_state['clear'] = 0;
+    }
+
+    startGame(){
+        let items = Array.from(players);
+        let guesser = items[Math.floor(Math.random() * players.length)];
     }
 }
 

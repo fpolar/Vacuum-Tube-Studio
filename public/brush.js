@@ -125,13 +125,14 @@ function toggle_tilt(){
   console.log("toggle tilt");
   if(tilting){
     enable_touch();
-    document.getElementById("tilt_message").style.display = "none";
+    document.getElementById("message").style.display = "none";
     document.getElementById("player_tag").style.WebkitAnimation = "none";
     document.getElementById("player_tag").style.animation = "none";
   }else{
     enable_tilt();
     //TODO animate icon somehow
-    document.getElementById("tilt_message").style.display = "block";
+    document.getElementById("message").innerHTML = "Tilt your device to move your drawing position on the canvas!"
+    document.getElementById("message").style.display = "block";
     document.getElementById("player_tag").style.WebkitAnimation = "pulse 2s ease-in-out infinite";
     document.getElementById("player_tag").style.animation = "pulse 2s ease-in-out infinite";
   }

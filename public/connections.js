@@ -24,9 +24,9 @@ function connectToRoom(mode){
  		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));
 	});
 	
-	console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
+	// console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
 
-	debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
+	// debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
 
 	//rejoin or join
 	if(getCookie('deviceid') != "" && 
@@ -126,16 +126,23 @@ function addNewPlayer(player, sessionId){
 			setCookie('deviceid', room.sessionId, reconnectMilli);
 	  		setCookie('exittime', date.getTime(), reconnectMilli);
 		};
-		
+		console.log(players);
 		if(!isHost){
 			resizeGarden();
 			$("html").css("background-color", "rgba("+player.color+", .2)");
 			// document.getElementById("player_tag").appendChild(main_dom);
 			$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
 			document.getElementById("player_tag").appendChild(dom);
-			enable_touch();
+			if(!players.length){
+				setPlayerAsLeader();
+			}else{
+				setPlayerWaiting();
+			}
+			// enable_touch();
 		}else{
 			//dont show the hosts player icon on canvas, because he cant draw
+			$("#player_tag").append("<div id='"+sessionId+"' class='player' style='background:rgb("+player.color+")'>"+player.emoji+
+				"<div class='score'>0</div></div>");
 			dom.style.display = 'none';
 		}
 	}

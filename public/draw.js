@@ -7,14 +7,6 @@
     const redraw_interval = 3;
     var pointsX = [], pointsY = [], sizes = [], redraw_timer = redraw_interval;
 
-    function path_toggle(p){
-        draw_path = p;
-        document.getElementById("pathbutton").disabled = !draw_path;
-        document.getElementById("dotbutton").disabled = draw_path;
-        if(draw_path) room.send({canvas_state: 'path'});
-        else room.send({canvas_state: 'dots'});
-    }
-
     function drawDot(x,y,size,color) {
         ctx.fillStyle = color;
 

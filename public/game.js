@@ -10,3 +10,7 @@ function setPlayerWaiting(){
     document.getElementById("message").innerHTML = "Waiting for the leader to start the game"
     document.getElementById("message").style.display = "block";
 }
+
+function startGame(){
+	room.send({})
+}

@@ -1,5 +1,5 @@
 import { Room } from "colyseus";
-import { Schema, type, MapSchema } from "@colyseus/schema";
+import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 
 var colorNames = ['tomato', 'orange',    'gold',      'slateBlue',  'aquamarine' , 'forestgreen', 'hotpink', 'purple']
 var colors = ['255,99,71', '255,165,0', '255,215,0', '106,90,205', '127,255,212', '34,139,34', '255,105,180 ', '128,0,128'];
@@ -18,7 +18,7 @@ export class Player extends Schema {
     @type("boolean")
     connected = true;
     @type("string")
-    state = 'init'; //draw, tilt, stop, guess, ready
+    state = 'init'; //draw, tilt, stop, guess, ready, host
     @type("number")
     score = 0;
     
@@ -63,11 +63,14 @@ export class State extends Schema {
     @type({ map: Player })
     players = new MapSchema<Player>();
 
-    @type({ map: number })
-    scores = new MapSchema<number>();
+    // @type({ map: 'number' })
+    // scores = new MapSchema<'number'>();
 
     @type("string")
-    current_word = 'buh';
+    current_word = 'game not started';
+
+    @type("number")
+    last_guesser_index = -1;
 
     @type("number")
     host_canvas_width = -1;
@@ -98,7 +101,9 @@ export class State extends Schema {
     }
 
     setPlayerState(id: string, state: string){
-        this.players[ id ].state = state;
+        if(this.players[ id ].state != 'host'){
+            this.players[ id ].state = state;
+        }
     }
 
     setPlayerEmoji(id: string, data: any){
@@ -137,18 +142,47 @@ export class State extends Schema {
         this.canvas_state['clear'] = 0;
     }
 
-    setupRound(){
+    //if its the first round, players should be ready to start the game, if not they should just draw
+    //so player_state will either be 'ready' or 'draw'
+    setupRound(player_state){
+        console.log('new round');
         let new_word_index = Math.floor(Math.random() * tempDict.length);
         this.current_word = tempDict[new_word_index];
+        console.log(this.current_word);
         tempDict.splice(new_word_index, 1);
 
-        players.forEach(function(value, key, map){
-            value.state = 'ready';
-        });
+        //this is a weird work around, take another try if it becomes frustrating in game
+        let i = 0;
+        let host_index = -1;
+        for (let key in this.players) {
+            if(this.players[key].state == 'host'){
+                host_index = i;
+                console.log(key, 'is host');
+            }
+            // this.setPlayerState(key, player_state);
+            this.setPlayerState(key, 'ready');
+            console.log(key);
+            i++;
+        }
 
-        let items = Array.from(this.players);
-        let guesser = items[Math.floor(Math.random() * this.players.length)];
-        guesser.state = 'guess';
+        let guesser_index = Math.floor(Math.random() * i);
+        while(guesser_index == host_index || guesser_index == this.last_guesser_index){
+            guesser_index = Math.floor(Math.random() * i);
+        }
+        this.last_guesser_index = guesser_index;
+        console.log(guesser_index);
+
+        i = 0;
+        for(let key in this.players) {
+            if(guesser_index == i++) {
+                this.setPlayerState(key, 'guess');
+                console.log(key, ' is guessing ', this.players[key].state);
+            }
+        }
+    }
+
+    incrementPlayerScore(id: string){
+        this.players[ id ].score++;
     }
 }
 
@@ -165,30 +199,34 @@ export class MyRoom extends Room<State> {
         console.log(client.sessionId + " Joined MyRoom");
     }
 
-
-    async onLeave (client, consented: boolean) {
-      // flag client as inactive for other users
-      this.state.players[client.sessionId].connected = false;
-
-      try {
-        if (consented) {
-            throw new Error("consented leave");
-        }
-
-        // allow disconnected client to rejoin into this room until 20 seconds
-        await this.allowReconnection(client, 10);
-
-        // client returned! let's re-activate it.
-        this.state.players[client.sessionId].connected = true;
-        console.log("client reconnected! "+client.sessionId);
-
-      } catch (e) {
-
-        // 52 seconds expired. let's remove the client.
+    onLeave(client) {
         this.state.removePlayer(client.sessionId);
         console.log("client left for good! "+client.sessionId);
-      }
     }
+
+    // async onLeave (client, consented: boolean) {
+    //   // flag client as inactive for other users
+    //   this.state.players[client.sessionId].connected = false;
+
+    //   try {
+    //     if (consented) {
+    //         throw new Error("consented leave");
+    //     }
+
+    //     // allow disconnected client to rejoin into this room until 20 seconds
+    //     await this.allowReconnection(client, 10);
+
+    //     // client returned! let's re-activate it.
+    //     this.state.players[client.sessionId].connected = true;
+    //     console.log("client reconnected! "+client.sessionId);
+
+    //   } catch (e) {
+
+    //     // 52 seconds expired. let's remove the client.
+    //     this.state.removePlayer(client.sessionId);
+    //     console.log("client left for good! "+client.sessionId);
+    //   }
+    // }
 
     onMessage (client, data) {
         console.log("MyRoom received message from", client.sessionId, ":", data);
@@ -228,11 +266,15 @@ export class MyRoom extends Room<State> {
         }
 
         if(data.start){
-            setupRound();
+            // if(data.start == 'next_round'){
+            //     this.state.setupRound('draw');
+            // }else{
+                this.state.setupRound('ready');
+            // }
         }
         if(data.round_winner){
-            this.state.scores[data.round_winner]++;
-            setupRound();
+            // this.state.scores[data.round_winner]++;
+            this.state.incrementPlayerScore(data.round_winner);
         }
     }
 

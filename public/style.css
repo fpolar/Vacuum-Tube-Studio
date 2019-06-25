@@ -7,12 +7,12 @@
   width: 100vw;
   height: 100vh;
   /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
-  -webkit-touch-callout: none;
+  -webkit-t/*ouch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none;*/
 }
 #garden {
   background-color: white;
@@ -34,6 +34,12 @@
   display: none;
   height: 100%;
   width: 100%;
+}
+
+#submit_winners{
+  position: absolute;
+  bottom: 0;
+  height: 10%;
 }
 
 #message{
@@ -113,12 +119,12 @@
 #canvas_ui {
   /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
   display: none;
-  -webkit-touch-callout: none;
+  -webkit-touch-callout: none;/*
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none;*/
 }
 #toolbar {
   text-align: center;

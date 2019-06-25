@@ -42,8 +42,12 @@ TODO
 - use just orientation and thick or thick mode to paint from user in one spot
 
 - pictionary meets heads up
-
+- make submit button so guesser can choose to give points to multiple people
 - big reveal of word animating towards screen(getting bigger) and fading out
+
+- add a button to allow user to save canvas as png (only fire once)
+`var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+window.location.href=image;`
 
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.

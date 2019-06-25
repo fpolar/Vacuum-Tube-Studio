@@ -122,6 +122,7 @@ function doneDrawing(){
 
 //call funcs that add and remove listeners for new control type and start or stop animations
 function toggle_tilt(){
+  if(main_player.state == 'guess') return;
   console.log("toggle tilt");
   if(tilting){
     enable_touch();
@@ -139,10 +140,20 @@ function toggle_tilt(){
   tilting = !tilting;
 }
 
+function disable_tilt(){
+  // stop reacting to orientation and movement events
+  window.removeEventListener('deviceorientation', handleOrientation);
+  window.removeEventListener('devicemotion', handleMotion);
+}
+
 function enable_tilt(){
   clearCanvas(garden, ctx);
   window.addEventListener('deviceorientation', handleOrientation);
   window.addEventListener('devicemotion', handleMotion);
+  disable_touch();
+}
+
+function disable_touch(){
   // stop reacting to touch events on the garden
   canvas.removeEventListener('touchstart', handleDraw, false);
   canvas.removeEventListener('touchmove', handleDraw, false);
@@ -150,15 +161,23 @@ function enable_tilt(){
 }
 
 function enable_touch(){
-  //make sure a player who was guessing last round and isn't now can see the canvas
-  document.getElementById("garden_canvas").style.display = 'block';
-  document.getElementById("player_selector").style.display = 'none';
-  // resizeGarden();
-  // stop reacting to orientation and movement events
-  window.removeEventListener('deviceorientation', handleOrientation);
-  window.removeEventListener('devicemotion', handleMotion);
   // React to touch events on the garden
   canvas.addEventListener('touchstart', handleDraw, false);
   canvas.addEventListener('touchmove', handleDraw, false);
   canvas.addEventListener('touchend', doneDrawing, false);
+  disable_tilt();
+}
+
+function reset_brush_ui(){
+  winners = [];
+  console.log('reseting_brush_ui');
+  document.removeEventListener("click", startGame);
+  document.removeEventListener('touchstart', startGame, false);
+  document.removeEventListener('touchmove', startGame, false);
+  document.removeEventListener('touchend', startGame, false);
+  document.getElementById("message").style.display = 'none';
+  document.getElementById("garden_canvas").style.display = 'block';
+  document.getElementById("player_selector").style.display = 'none';
+  //resizeGarden();
+  enable_touch();
 }

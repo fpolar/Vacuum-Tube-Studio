@@ -1,4 +1,5 @@
-var mobile_debug = false;
+var mobile_debug = true;
+var rejoin_enabled = false;
 var client, room;
 var players = {};
 
@@ -29,7 +30,8 @@ function connectToRoom(mode){
 	// debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
 
 	//rejoin or join
-	if(getCookie('deviceid') != "" && 
+	if(rejoin_enabled &&
+		getCookie('deviceid') != "" && 
 		getCookie('deviceid') != "undefined" &&
 		getCookie('exittime')+reconnectMilli>date.getTime()){
 		console.log('rejoining');
@@ -53,16 +55,20 @@ function setupPlayerConnections(){
 	room.state.players.onAdd = function(player, sessionId) {
 		// console.log(client, sessionId, player);
 
-		if(isHost){
+		addNewPlayer(player, sessionId);
+
+		if(main_player && main_player.sessionId == sessionId && isHost){
 			if(room.state.host_canvas_width == -1){
-				room.state.host_canvas_width = canvas.offsetWidth;
-				room.state.host_canvas_height = canvas.offsetHeight;
-				room.send({host_canvas_width: canvas.offsetWidth, host_canvas_height: canvas.offsetHeight});
+				room.send({state:'host',
+					host_canvas_width: canvas.offsetWidth, 
+					host_canvas_height: canvas.offsetHeight});
+			}else{
+				console.log('host already in room');
+				return;
 			}
-		}else{
+		}else if(!isHost){
 			resizeGarden();
 		}
-		addNewPlayer(player, sessionId);
 
 		window.addEventListener("error", function (e) {
 			room.send({error:e.message})
@@ -70,17 +76,28 @@ function setupPlayerConnections(){
 	}
 
 	room.state.players.onRemove = function(player, sessionId) {
-		document.getElementById("canvas_container").removeChild(players[sessionId]);
-		delete players[sessionId];
+		if(players[sessionId] && document.getElementById("canvas_container").contains(players[sessionId])){
+			document.getElementById("canvas_container").removeChild(players[sessionId]);
+			delete players[sessionId];
+		}
 	}
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
-		if(player.state == 'ready' && main_player.sessionId == sessionId){
-			enable_touch();
+		if(player.state == 'ready'){
+			console.log("player ready");
+			updateGameClient();
+			if(main_player.sessionId == sessionId){
+				reset_brush_ui();
+			}
 		}
-		if(player.state == 'guess' && main_player.sessionId == sessionId){
-			initGuess();
+		if(player.state == 'guess'){
+			updateGameClient();
+			if(main_player.sessionId == sessionId){
+				console.log('player guessing');
+				reset_brush_ui();
+				initGuess();
+			}
 		}
 		if(player.state == 'draw' && main_player.sessionId != sessionId){
 			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);
@@ -137,25 +154,36 @@ function addNewPlayer(player, sessionId){
 			resizeGarden();
 			$("html").css("background-color", "rgba("+player.color+", .2)");
 			// document.getElementById("player_tag").appendChild(main_dom);
-			$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
+			$("#player_tag").append("<div class='player' id='"+player.sessionId+
+				"' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
 			document.getElementById("player_tag").appendChild(dom);
-			if(!players.length){
-				setPlayerAsLeader();
+
+			//check for previous player state incase of reconnect
+			
+			if(player.state == 'guess'){
+				initGuess();
+				updateGameClient();
+			}else if(player.state == 'draw' || room.state.current_word != 'game not started'){
+				enable_touch();
+				updateGameClient();
 			}else{
-				setPlayerWaiting();
+				setPlayerAsLeader();
 			}
-			// enable_touch();
 		}else{
 			//dont show the hosts player icon on canvas, because he cant draw
-			$("#player_tag").append("<div id='"+sessionId+"' class='player' style='background:rgb("+player.color+")'>"+player.emoji+
-				"<div class='score'>0</div></div>");
 			dom.style.display = 'none';
+		}
+	} else if(isHost){
+		document.getElementById("player_container").appendChild(dom);
+		if(document.getElementById(player.sessionId)){
+
 		}
 	}
 
 	console.log("adding player", dom);
 	document.getElementById("canvas_container").appendChild(dom);
 	players[sessionId] = dom;
+	// if(player.state != 'host') players[sessionId] = dom;
 }
 
 //w3 cookie example functions

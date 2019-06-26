@@ -72,8 +72,6 @@ if they're in a spot on the canvas where they should be able to.
     - this might be ok, people draw slowly when on mobile
   - sometimes just switching to dots only fixes it for some reason
 
-- small bug, if orientation data sent too early, position of player on canvas isnt set
-
 - have a button/make user hold down on the canvas or their icon to draw when on tilt mode
 
 - after a few draws or after some condition is met, show tips on mobile
@@ -84,8 +82,8 @@ if they're in a spot on the canvas where they should be able to.
 
 - add a tool bar to the client side
   - size slider
-  - change emoji/color(most likely not let them select, just a randomiztion button)
+  - change emoji/color(most likely not let them select, just a randomization button)
 
 - try removing all jquery, it may be unnecessary
 
-- use let instead of var when necessary
+- use let instead of var when the scope allows

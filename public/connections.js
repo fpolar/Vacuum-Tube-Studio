@@ -86,18 +86,21 @@ function setupPlayerConnections(){
 		console.log(player.state);
 		if(player.state == 'ready'){
 			console.log("player ready");
-			updateGameClient();
 			if(main_player.sessionId == sessionId){
+				//remove redundant calls if word concurrency issue is fixed
+				updateGameClient();
 				reset_brush_ui();
 			}
+			updateGameClient();
 		}
 		if(player.state == 'guess'){
-			updateGameClient();
 			if(main_player.sessionId == sessionId){
 				console.log('player guessing');
+				updateGameClient();
 				reset_brush_ui();
 				initGuess();
 			}
+			updateGameClient();
 		}
 		if(player.state == 'draw' && main_player.sessionId != sessionId){
 			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);

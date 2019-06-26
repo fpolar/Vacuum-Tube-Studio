@@ -1,18 +1,24 @@
 var winners = [];
 
 var submit_button = document.createElement("div");
-submit_button.className = "player";
 submit_button.id = "submit_winners";
-submit_button.innerHTML = "Submit Winners";
-submit_button.style.background = "grey";
+submit_button.innerHTML = "</br>Submit Winners</br></br>";
+submit_button.style.background = "Gainsboro";
+submit_button.style.textAlign = "center";
+
+var guesser_instructions = document.createElement("div");
+guesser_instructions.id = "guesser_instructions";
+guesser_instructions.innerHTML = "</br></br>Tap the players with the best drawings</br></br></br>";
+guesser_instructions.style.background = "Gainsboro";
+guesser_instructions.style.textAlign = "center";
 
 function setPlayerAsLeader(){
     document.getElementById("message").innerHTML = "Tap Anywhere to start the game!"
     document.getElementById("message").style.display = "block";
     document.addEventListener("click", startGame);
-	document.removeEventListener('touchstart', startGame, false);
-	document.removeEventListener('touchmove', startGame, false);
-	document.removeEventListener('touchend', startGame, false);
+	document.addEventListener('touchstart', startGame, false);
+	document.addEventListener('touchmove', startGame, false);
+	document.addEventListener('touchend', startGame, false);
 }
 
 function startGame(){
@@ -22,6 +28,9 @@ function startGame(){
 		room.send({start: 'start'});
 	    document.getElementById("message").style.display = "none";
 	    document.removeEventListener("click", startGame);
+		document.removeEventListener('touchstart', startGame, false);
+		document.removeEventListener('touchmove', startGame, false);
+		document.removeEventListener('touchend', startGame, false);
 	}else{
 		//display some message, or add to current
 	}
@@ -32,8 +41,10 @@ function startGame(){
 function initGuess(){
 	submit_button.onclick = submitWinners;
 	document.getElementById("garden_canvas").style.display = 'none';
+	document.getElementById("word").style.display = 'none';
 
 	if(!document.getElementById("player_selector").innerHTML.includes('submit')){
+		document.getElementById("player_selector").append(guesser_instructions);
 		//fill player selector div
 		for (var key in players) {
 			console.log(key);
@@ -59,28 +70,15 @@ function updateGameClient(){
 
 function toggleWinner(player_elem, player_id){
 	console.log(player_id+" is a winner!", player_elem);
-	let player_color_raw = player_elem.style.backgroundColor.replace("rgb(", "").replace(")", "");
-	let color_nums = player_color_raw.split(",");
-	console.log(player_color_raw, color_nums);
 	if(winners.includes(player_id)){
         var w_index = winners.indexOf(player_id);
         if (w_index > -1) {
             winners.splice(w_index, 1);
         }
-		let r = Math.round(parseInt(color_nums[0])*10/7);
-		let g = Math.round(parseInt(color_nums[1])*10/7);
-		let b = Math.round(parseInt(color_nums[2])*10/7);
-		console.log(r,g,b);
-		document.getElementById("9XRky3mCz").style.backgroundColor = 'rgb(0,0,0)'
-		player_elem.style.backgroundColor= "rgb("+r+","+g+","+b+","+")";
+		player_elem.style.filter = 'saturate(100%) brightness(100%)';
 	}else{
 		winners.push(player_id);
-		let r = Math.round(parseInt(color_nums[0])*.7);
-		let g = Math.round(parseInt(color_nums[1])*.7);
-		let b = Math.round(parseInt(color_nums[2])*.7);
-		console.log(r,g,b);
-		document.getElementById("9XRky3mCz").style.backgroundColor = 'rgb(0,0,0)'
-		player_elem.style.backgroundColor= "rgb("+r+","+g+","+b+","+")";
+		player_elem.style.filter = 'saturate(66%) brightness(77%)';
 	}
 }
 
@@ -90,6 +88,10 @@ function submitWinners(){
 		room.send({round_winner:id});
 	});
 	room.send({start:'next_round'});
-	winners = [];
 	reset_brush_ui();
+	let p_selector_list = [...document.getElementById('player_selector').children];
+	p_selector_list.forEach(function(p_selector){
+		p_selector.style.filter = '';
+	});
+	winners = [];
 }

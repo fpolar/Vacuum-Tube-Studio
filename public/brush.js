@@ -13,8 +13,8 @@ var debugOrientation = false;
 var debugAcceleration = false;
 
 function resizeGarden(){
-  maxX = garden.offsetWidth;
-  maxY = garden.offsetHeight;
+  maxX = garden.offsetWidth-10;
+  maxY = garden.offsetHeight-10;
 
   //subtract 10 from each for the border of the garden
   ctx.canvas.width  = maxX;
@@ -176,8 +176,9 @@ function reset_brush_ui(){
   document.removeEventListener('touchmove', startGame, false);
   document.removeEventListener('touchend', startGame, false);
   document.getElementById("message").style.display = 'none';
-  document.getElementById("garden_canvas").style.display = 'block';
   document.getElementById("player_selector").style.display = 'none';
+  document.getElementById("garden_canvas").style.display = 'block';
+  document.getElementById("word").style.display = 'block';
   //resizeGarden();
   enable_touch();
 }

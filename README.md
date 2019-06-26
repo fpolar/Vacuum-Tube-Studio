@@ -39,15 +39,20 @@ Running The Project
 
 TODO
 -------------------
-- use just orientation and thick or thick mode to paint from user in one spot
+- use just orientation and thick or thin mode to paint from user in one spot
 
 - pictionary meets heads up
 - make submit button so guesser can choose to give points to multiple people
 - big reveal of word animating towards screen(getting bigger) and fading out
 
+- see if i can remove the player_state parameter from setupround in myroom.ts
+
 - add a button to allow user to save canvas as png (only fire once)
 `var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
 window.location.href=image;`
+
+- If I make this into a BR, I'm going to have to find a new way to store the word
+  or else people could cheat easily with the console
 
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.

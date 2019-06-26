@@ -145,10 +145,10 @@ export class State extends Schema {
     //if its the first round, players should be ready to start the game, if not they should just draw
     //so player_state will either be 'ready' or 'draw'
     setupRound(player_state){
-        console.log('new round');
+        console.log('new round', tempDict);
         let new_word_index = Math.floor(Math.random() * tempDict.length);
         this.current_word = tempDict[new_word_index];
-        console.log(this.current_word);
+        console.log(new_word_index, tempDict[new_word_index], this.current_word);
         tempDict.splice(new_word_index, 1);
 
         //this is a weird work around, take another try if it becomes frustrating in game
@@ -161,7 +161,7 @@ export class State extends Schema {
             }
             // this.setPlayerState(key, player_state);
             this.setPlayerState(key, 'ready');
-            console.log(key);
+            // console.log(key);
             i++;
         }
 

@@ -18,16 +18,11 @@
   background-color: white;
   position: relative;
   width: 85%;
-  height: 80vh;
+  height: 60vh;
   margin: 9.5vh 7.45% ;
   border: 5px solid #CCC;
   border-radius: 10px;
   z-index: 10;
-}
-
-#garden_canvas{
-  z-index: 1;
-  opacity: .7;
 }
 
 #tilt_message{
@@ -42,17 +37,17 @@
 #player_tag{
   z-index: 101;
   position: absolute;
-  top:-25px;
-  left:-25px;
-  width:50px;
-  height:50px;
+  top:10%;
+  left:10%;
+  width:79%;
+  height:75%;
   border-radius: 100%;
   -webkit-animation: none;
   animation: none;
 }
 #player_tag .player{
   width: 100%;
-  font-size: 35px;
+  font-size: 100px;
   text-align: center;
   height: 100%;
   overflow: hidden;

@@ -59,8 +59,6 @@ function setupPlayerConnections(){
 				room.state.host_canvas_height = canvas.offsetHeight;
 				room.send({host_canvas_width: canvas.offsetWidth, host_canvas_height: canvas.offsetHeight});
 			}
-		}else{
-			resizeGarden();
 		}
 		addNewPlayer(player, sessionId);
 
@@ -76,14 +74,10 @@ function setupPlayerConnections(){
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
-		if(player.state == 'draw' && main_player.sessionId != sessionId){
+		if(player.state == 'draw' && isHost){
 			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);
-			var explicit_pos_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x + player.x*player.device_width;
-			var explicit_pos_y = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y + player.y*player.device_height;
-			if(!isHost){
-				explicit_pos_x -= (room.state.host_canvas_width-main_player.device_width)*main_player.canvas_pos_x;
-				explicit_pos_y -= (room.state.host_canvas_height-main_player.device_height)*main_player.canvas_pos_y;
-			}
+			let explicit_pos_x = room.state.host_canvas_width*player.canvas_pos_x
+			let explicit_pos_y = room.state.host_canvas_height*player.canvas_pos_y
 			drawDotExplicitPosition(explicit_pos_x, explicit_pos_y, player.z, "rgba("+player.color+", 1)");
 		}
 
@@ -128,12 +122,11 @@ function addNewPlayer(player, sessionId){
 		};
 		
 		if(!isHost){
-			resizeGarden();
-			$("html").css("background-color", "rgba("+player.color+", .2)");
-			// document.getElementById("player_tag").appendChild(main_dom);
-			$("#player_tag").append("<div class='player' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
-			document.getElementById("player_tag").appendChild(dom);
-			enable_touch();
+			document.body.style.backgroundColor = "rgba("+player.color+", .2)";
+			document.getElementById("player_tag").append(dom);
+			document.getElementById("player_tag").innerHTML = "<div class='player' style='background:rgb("+
+			player.color+")'>"+player.emoji+"</div>";
+			
 		}else{
 			//dont show the hosts player icon on canvas, because he cant draw
 			dom.style.display = 'none';

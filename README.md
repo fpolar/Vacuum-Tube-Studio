@@ -40,13 +40,14 @@ Running The Project
 TODO
 -------------------
 - use just orientation and thick or thick mode to paint from user in one spot
-
-- pictionary meets heads up
+- use cursor size and shape on canvas to help user understand what their about to paint
 
 - Users who enter later, risize, or refresh page cannot see the drawings on their client, even
 if they're in a spot on the canvas where they should be able to.
   - maybe keep track of all 'dots' drawn so they can be redrawn on join?
   - related to below note
+
+- if im getting an object with `document.getElementById("x")` a lot, store it as a variable
 
 - right now, all clients draw all other clients when signal recieved.
   - check if incoming client signal position is within current clients view, if not dont draw
@@ -60,10 +61,6 @@ if they're in a spot on the canvas where they should be able to.
   - it may just be a speed/latency issue, drawing a little slowly works fine
     - this might be ok, people draw slowly when on mobile
   - sometimes just switching to dots only fixes it for some reason
-
-- small bug, if orientation data sent too early, position of player on canvas isnt set
-
-- have a button/make user hold down on the canvas or their icon to draw when on tilt mode
 
 - after a few draws or after some condition is met, show tips on mobile
   - like a message that tells the user to hit their emoji to move their position on the canvas

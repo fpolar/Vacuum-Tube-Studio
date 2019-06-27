@@ -1,4 +1,5 @@
 var winners = [];
+var round_num = 0;
 
 var submit_button = document.createElement("div");
 submit_button.id = "submit_winners";

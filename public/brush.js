@@ -108,7 +108,8 @@ function handleDraw(event){
     x = (x - garden.offsetLeft)/canvas.offsetWidth;
     y = (y - garden.offsetTop)/canvas.offsetHeight;
 
-    drawDot(x, y, .5, "rgb("+main_player.color+")");
+    brushDraw(x, y, .5);
+    console.log('handle draw');
     room.send({state:'draw', x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
   }
   event.preventDefault();
@@ -116,7 +117,7 @@ function handleDraw(event){
 
 function doneDrawing(){
   room.send({state:'draw'});
-  liftBrush();
+  liftPlayerBrush();
   room.send({state:'stop'});
 }
 

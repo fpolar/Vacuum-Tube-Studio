@@ -9,7 +9,10 @@ var isHost = false;
 var deviceid = {};
 //what problems could a global date var like this create
 var date = new Date(); 
-var reconnectMilli = 10000
+var reconnectMilli = 10000;
+
+var last_draw_id = '';
+var last_word = '';
 
 function connectToRoom(mode){
 
@@ -52,6 +55,10 @@ function setupPlayerConnections(){
 	if(deviceid == {}){
 		deviceId = {sessionId: room.sessionId};
 	}
+	//temporary fix for word always being a round behind
+	setInterval(function(){
+		if(document.getElementById('word').innerHTML != 'game not started') updateGameClient();
+	}, 1234);
 	room.state.players.onAdd = function(player, sessionId) {
 		// console.log(client, sessionId, player);
 
@@ -85,10 +92,9 @@ function setupPlayerConnections(){
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
 		if(player.state == 'ready'){
-			console.log("player ready");
+			console.log("player ready", room.state.current_word);
 			if(main_player.sessionId == sessionId){
 				//remove redundant calls if word concurrency issue is fixed
-				updateGameClient();
 				reset_brush_ui();
 			}
 			updateGameClient();
@@ -96,21 +102,17 @@ function setupPlayerConnections(){
 		if(player.state == 'guess'){
 			if(main_player.sessionId == sessionId){
 				console.log('player guessing');
-				updateGameClient();
 				reset_brush_ui();
 				initGuess();
 			}
 			updateGameClient();
 		}
-		if(player.state == 'draw' && main_player.sessionId != sessionId){
-			console.log('draw',room.state.host_canvas_width,player.canvas_pos_x,player.x,player.device_width);
+		if(player.state == 'draw' && isHost){
+			//may be able to just pass player beca and do these explicit pos calculations in the draw func
+			console.log('draw on canvas');
 			var explicit_pos_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x + player.x*player.device_width;
 			var explicit_pos_y = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y + player.y*player.device_height;
-			if(!isHost){
-				explicit_pos_x -= (room.state.host_canvas_width-main_player.device_width)*main_player.canvas_pos_x;
-				explicit_pos_y -= (room.state.host_canvas_height-main_player.device_height)*main_player.canvas_pos_y;
-			}
-			drawDotExplicitPosition(explicit_pos_x, explicit_pos_y, player.z, "rgba("+player.color+", 1)");
+			canvasDraw(explicit_pos_x, explicit_pos_y, player.z, player);
 		}
 
 		if(player.state == 'tilt'){
@@ -120,7 +122,11 @@ function setupPlayerConnections(){
 		}
 
 		if(player.state == 'stop'){
-			liftBrush();
+			if(isHost){
+				liftCanvasBrush(player);
+			}else{
+				liftPlayerBrush();
+			}
 		}
 	}
 
@@ -138,6 +144,7 @@ function setupPlayerConnections(){
 }
 
 function addNewPlayer(player, sessionId){
+	console.log(player, sessionId, isHost)
 	var dom = document.createElement("div");
 	dom.className = "player";
 	dom.id = sessionId;
@@ -177,9 +184,13 @@ function addNewPlayer(player, sessionId){
 			dom.style.display = 'none';
 		}
 	} else if(isHost){
+
+		//add the new player to the hosts map of player paths
+		player_paths[sessionId] = {pointsX:[], pointsY:[], sizes:[]};
+
 		document.getElementById("player_container").appendChild(dom);
 		if(document.getElementById(player.sessionId)){
-
+			//add something to show score
 		}
 	}
 

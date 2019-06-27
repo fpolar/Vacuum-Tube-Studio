@@ -44,7 +44,9 @@ TODO
 - pictionary meets heads up
 - make submit button so guesser can choose to give points to multiple people
 - big reveal of word animating towards screen(getting bigger) and fading out
-
+- when two players draw at the same time it flips out
+- for now, a simple timeout works fairly well, but a round counter could 
+  synchronize more cleanly in updategameclient
 - see if i can remove the player_state parameter from setupround in myroom.ts
 
 - add a button to allow user to save canvas as png (only fire once)

@@ -71,6 +71,9 @@ export class State extends Schema {
     current_word = 'game not started';
 
     @type("number")
+    round_number = 0;
+
+    @type("number")
     last_guesser_index = -1;
 
     @type("number")
@@ -182,6 +185,7 @@ export class State extends Schema {
                 console.log(key, ' is guessing ', this.players[key].state);
             }
         }
+        this.round_number++;
     }
 
     incrementPlayerScore(id: string){
@@ -267,6 +271,11 @@ export class MyRoom extends Room<State> {
                 this.state.canvas_state['clear'] = 1;
             }
         }
+        
+        if(data.round_winner){
+            // this.state.scores[data.round_winner]++;
+            this.state.incrementPlayerScore(data.round_winner);
+        }
 
         if(data.start){
             // if(data.start == 'next_round'){
@@ -274,10 +283,6 @@ export class MyRoom extends Room<State> {
             // }else{
                 this.state.setupRound('ready');
             // }
-        }
-        if(data.round_winner){
-            // this.state.scores[data.round_winner]++;
-            this.state.incrementPlayerScore(data.round_winner);
         }
     }
 

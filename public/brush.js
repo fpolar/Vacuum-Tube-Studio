@@ -25,19 +25,19 @@ function brush_init(){
   document.getElementById("brush_ui").addEventListener("touchstart", enable_draw);
   document.getElementById("brush_ui").addEventListener("touchend", disable_draw);
 
+  window.addEventListener('deviceorientation', handleOrientation);
+  window.addEventListener('devicemotion', handleMotion);
+
   connectToRoom(1);
 }
 
 
 function enable_draw(){
   draw = true;
-  window.addEventListener('deviceorientation', handleOrientation);
-  window.addEventListener('devicemotion', handleMotion);
 }
 function disable_draw(){
   draw = false
-  window.removeEventListener('deviceorientation', handleOrientation);
-  window.removeEventListener('devicemotion', handleMotion);
+  room.send({state:'stop'});
 }
 
 function handleMotion(event) {
@@ -57,11 +57,10 @@ function handleMotion(event) {
 }
 
 function handleOrientation(event) {
-  if(!draw) return;
 
-  var x = event.gamma; // In degree in the range [-90,90]
+  var x = event.alpha; // In degree in the range [0,360]
   var y = event.beta;  // In degree in the range [-180,180]
-  var z = event.alpha; // In degree in the range [0,360]
+  var z = event.gamma; // In degree in the range [-90,90]
 
   if(debugOrientation){
     output.innerHTML  = "alpha : " + z + "<br/>";
@@ -90,7 +89,7 @@ function handleOrientation(event) {
   xOut = x/120;
   yOut = y/90;
   zOut = z/60;
-  room.send({state:'draw', canvas_pos_x:xOut, canvas_pos_y:yOut});
+  if(draw) room.send({state:'draw', x:xOut, y:yOut});
 }
 
 function handleDraw(event){
@@ -106,10 +105,4 @@ function handleDraw(event){
     room.send({state:'draw', x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
   }
   event.preventDefault();
-}
-
-function doneDrawing(){
-  room.send({state:'draw'});
-  liftBrush();
-  room.send({state:'stop'});
 }

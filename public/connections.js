@@ -81,12 +81,6 @@ function setupPlayerConnections(){
 			drawDotExplicitPosition(explicit_pos_x, explicit_pos_y, player.z, "rgba("+player.color+", 1)");
 		}
 
-		if(player.state == 'tilt'){
-			players[sessionId].style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
-			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
-			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
-		}
-
 		if(player.state == 'stop'){
 			liftBrush();
 		}

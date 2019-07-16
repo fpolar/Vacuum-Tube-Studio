@@ -43,6 +43,8 @@ TODO
 
 - use just orientation and thick or thin mode to paint from user in one spot
 
+- double check my cloning of the player dom doesnt create problems with its id
+
 - pictionary meets heads up
 - make submit button so guesser can choose to give points to multiple people
 - big reveal of word animating towards screen(getting bigger) and fading out

@@ -150,9 +150,15 @@ function addNewPlayer(player, sessionId){
 	console.log(player, sessionId, isHost)
 	var dom = document.createElement("div");
 	dom.className = "player";
+	//giving it an id could cause problems if i ever use it for something 
+	//since I clone the element
 	dom.id = sessionId;
 	dom.innerHTML = player.emoji;
 	dom.style.background = "rgb("+player.color+")";
+
+	console.log("adding player", sessionId, dom);
+	document.getElementById("canvas_container").appendChild(dom);
+	players[sessionId] = dom;
 
 	if(room.sessionId == sessionId){ 
 		main_player = player;
@@ -168,9 +174,9 @@ function addNewPlayer(player, sessionId){
 			resizeGarden();
 			$("html").css("background-color", "rgba("+player.color+", .2)");
 			// document.getElementById("player_tag").appendChild(main_dom);
-			$("#player_tag").append("<div class='player' id='"+player.sessionId+
-				"' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
-			document.getElementById("player_tag").appendChild(dom);
+			// $("#player_tag").append("<div class='player' id='"+player.sessionId+
+			// 	"' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
+			document.getElementById("player_tag").appendChild(dom.cloneNode(true));
 
 			//check for previous player state incase of reconnect
 			
@@ -193,19 +199,15 @@ function addNewPlayer(player, sessionId){
 			//add the new player to the hosts map of player paths
 			player_paths[sessionId] = {pointsX:[], pointsY:[], sizes:[]};
 
-			document.getElementById("player_container").appendChild(dom);
+			document.getElementById("player_container").appendChild(dom.cloneNode(true));
 			if(document.getElementById(player.sessionId)){
 				//add something to show score
 			}
 		}else if(main_player && main_player.state == 'guess'){
-			// insertInPlayerSelector(dom);
-			fillPlayerSelector();
+			insertInPlayerSelector(dom.cloneNode(true));
+			// fillPlayerSelector();
 		}
 	}
-
-	console.log("adding player", dom);
-	document.getElementById("canvas_container").appendChild(dom);
-	players[sessionId] = dom;
 	// if(player.state != 'host') players[sessionId] = dom;
 }
 

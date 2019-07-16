@@ -39,6 +39,8 @@ Running The Project
 
 TODO
 -------------------
+- save every users every move/paint on the server for easiers clears and redraws and etc
+
 - use just orientation and thick or thin mode to paint from user in one spot
 
 - pictionary meets heads up

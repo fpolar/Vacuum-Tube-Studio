@@ -91,6 +91,9 @@ function setupPlayerConnections(){
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
+		if(sessionId == main_player.sessionId){
+			main_player = player;
+		}
 		if(player.state == 'ready'){
 			console.log("player ready", room.state.current_word);
 			if(main_player.sessionId == sessionId){
@@ -115,7 +118,7 @@ function setupPlayerConnections(){
 			canvasDraw(explicit_pos_x, explicit_pos_y, player.z, player);
 		}
 
-		if(player.state == 'tilt'){
+		if(player.state == 'tilt' || player.state == 'init'){
 			players[sessionId].style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
 			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
 			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
@@ -151,8 +154,9 @@ function addNewPlayer(player, sessionId){
 	dom.innerHTML = player.emoji;
 	dom.style.background = "rgb("+player.color+")";
 
-	if(room.sessionId == sessionId){
+	if(room.sessionId == sessionId){ 
 		main_player = player;
+		// fillPlayerSelector();
 		setCookie('deviceid', room.sessionId, reconnectMilli);
 
 		window.onunload = function(){
@@ -183,14 +187,19 @@ function addNewPlayer(player, sessionId){
 			//dont show the hosts player icon on canvas, because he cant draw
 			dom.style.display = 'none';
 		}
-	} else if(isHost){
+	} else{ 
+		console.log(main_player);
+		if(isHost){
+			//add the new player to the hosts map of player paths
+			player_paths[sessionId] = {pointsX:[], pointsY:[], sizes:[]};
 
-		//add the new player to the hosts map of player paths
-		player_paths[sessionId] = {pointsX:[], pointsY:[], sizes:[]};
-
-		document.getElementById("player_container").appendChild(dom);
-		if(document.getElementById(player.sessionId)){
-			//add something to show score
+			document.getElementById("player_container").appendChild(dom);
+			if(document.getElementById(player.sessionId)){
+				//add something to show score
+			}
+		}else if(main_player && main_player.state == 'guess'){
+			// insertInPlayerSelector(dom);
+			fillPlayerSelector();
 		}
 	}
 

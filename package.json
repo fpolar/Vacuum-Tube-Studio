@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@colyseus/schema": "^0.4.32",
-    "chrome-launcher": "^0.10.7",
     "colyseus": "^0.10.7",
     "colyseus.js": "^0.10.5",
     "express": "^4.16.4",

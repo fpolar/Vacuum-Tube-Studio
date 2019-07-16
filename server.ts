@@ -11,8 +11,6 @@ import { MyRoom } from "./MyRoom";
 const port = Number(process.env.PORT || 8080);
 const app = express();
 
-import { chromeLauncher } from 'chrome-launcher';
-
 const gameServer = new Server({
   server: createServer(app)
 });
@@ -41,22 +39,6 @@ gameServer.listen(port);
 (async function() {
 	const url = await ngrok.connect(port);
 	console.log(`Listening on ${ url }`);
-
-	chromeLauncher.launch({
-	  startingUrl: url
-	}).then(chrome => {
-	  console.log(`Chrome debugging port running on ${chrome.port}`);
-	});
-	chromeLauncher.launch({
-	  startingUrl: url
-	}).then(chrome => {
-	  console.log(`Chrome debugging port running on ${chrome.port}`);
-	});
-	chromeLauncher.launch({
-	  startingUrl: url
-	}).then(chrome => {
-	  console.log(`Chrome debugging port running on ${chrome.port}`);
-	});
 })();
 
 console.log(`Listening on https://localhost:${ port }`);

@@ -33,10 +33,11 @@ function brush_init(){
 
 
 function enable_draw(){
-  draw = true;
+  document.getElementById("brush_ui").style.filter = 'saturate(66%) brightness(77%)';
 }
 function disable_draw(){
-  draw = false
+  draw = false;
+  document.getElementById("brush_ui").style.filter = 'saturate(100%) brightness(100%)';
   room.send({state:'stop'});
 }
 

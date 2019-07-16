@@ -81,7 +81,7 @@ function setupPlayerConnections(){
 			drawDotExplicitPosition(explicit_pos_x, explicit_pos_y, player.z, "rgba("+player.color+", 1)");
 		}
 
-		if(player.state == 'stop'){
+		if(player.state == 'stop' && isHost){
 			liftBrush();
 		}
 	}

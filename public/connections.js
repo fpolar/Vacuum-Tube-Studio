@@ -110,6 +110,12 @@ function setupPlayerConnections(){
 			}
 			updateGameClient();
 		}
+		if(player.state == 'clear' && isHost){
+			//may be able to just pass player beca and do these explicit pos calculations in the draw func
+			console.log('player cleared, reseting canvas');
+			canvasRedraw();
+
+		}
 		if(player.state == 'draw' && isHost){
 			//may be able to just pass player beca and do these explicit pos calculations in the draw func
 			console.log('draw on canvas');
@@ -123,14 +129,6 @@ function setupPlayerConnections(){
 			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
 			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
 		}
-
-		if(player.state == 'stop'){
-			if(isHost){
-				liftCanvasBrush(player);
-			}else{
-				liftPlayerBrush();
-			}
-		}
 	}
 
 	room.state.canvas_state.onChange = function (value, state) {
@@ -141,7 +139,7 @@ function setupPlayerConnections(){
 			draw_path = false;
 		}
 		if(state == 'clear' && value == 1){		
-	        ctx.clearRect(0, 0, canvas.width, canvas.height);
+			clearCanvas();
 		}
 	}
 }
@@ -196,9 +194,6 @@ function addNewPlayer(player, sessionId){
 	} else{ 
 		console.log(main_player);
 		if(isHost){
-			//add the new player to the hosts map of player paths
-			player_paths[sessionId] = {pointsX:[], pointsY:[], sizes:[]};
-
 			document.getElementById("player_container").appendChild(dom.cloneNode(true));
 			if(document.getElementById(player.sessionId)){
 				//add something to show score

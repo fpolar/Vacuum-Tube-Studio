@@ -40,6 +40,7 @@ Running The Project
 TODO
 -------------------
 - save every users every move/paint on the server for easiers clears and redraws and etc
+  - DONE but canvas reset may draw things in wrong z order
 
 - use just orientation and thick or thin mode to paint from user in one spot
 

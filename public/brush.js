@@ -104,21 +104,14 @@ function handleDraw(event){
     var touch = event.touches[0];
     var x = touch.clientX;
     var y = touch.clientY;
+    brushDraw(x, y, .5);
 
     x = (x - garden.offsetLeft)/canvas.offsetWidth;
     y = (y - garden.offsetTop)/canvas.offsetHeight;
 
-    brushDraw(x, y, .5);
-    console.log('handle draw');
-    room.send({state:'draw', x:x, y:y, z:.5, alpha:null, beta:null, gamma:null});
+    room.send({state:'draw', x:x, y:y, z:.5});
   }
   event.preventDefault();
-}
-
-function doneDrawing(){
-  room.send({state:'draw'});
-  liftPlayerBrush();
-  room.send({state:'stop'});
 }
 
 //call funcs that add and remove listeners for new control type and start or stop animations
@@ -158,14 +151,14 @@ function disable_touch(){
   // stop reacting to touch events on the garden
   canvas.removeEventListener('touchstart', handleDraw, false);
   canvas.removeEventListener('touchmove', handleDraw, false);
-  canvas.removeEventListener('touchend', doneDrawing, false);
+  canvas.removeEventListener('touchend', liftPlayerBrush, false);
 }
 
 function enable_touch(){
   // React to touch events on the garden
   canvas.addEventListener('touchstart', handleDraw, false);
   canvas.addEventListener('touchmove', handleDraw, false);
-  canvas.addEventListener('touchend', doneDrawing, false);
+  canvas.addEventListener('touchend', liftPlayerBrush, false);
   disable_tilt();
 }
 

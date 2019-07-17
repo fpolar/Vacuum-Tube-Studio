@@ -1,5 +1,5 @@
 import { Room } from "colyseus";
-import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
+import { Schema, type, MapSchema } from "@colyseus/schema";
 
 export class Player extends Schema {
     @type("string")
@@ -28,24 +28,15 @@ export class Player extends Schema {
     @type("number")
     z = -100;
 
-    @type("number")
-    alpha = Math.floor(Math.random() * 400);
-    @type("number")
-    beta = Math.floor(Math.random() * 400);
-    @type("number")
-    gamma = Math.floor(Math.random() * 400);
-
-    @type("number")
-    accel_x = Math.floor(Math.random() * 400);
-    @type("number")
-    accel_y = Math.floor(Math.random() * 400);
-    @type("number")
-    accel_z = Math.floor(Math.random() * 400);
+    strokes_x: number[] = [];
+    strokes_y: number[] = [];
+    strokes_z: number[] = [];
 
     @type("string")
     color = '-1';
     @type("string")
     emoji = '-1';
+
 }
 
 export class State extends Schema {
@@ -130,12 +121,19 @@ export class State extends Schema {
     }
 
     movePlayer (id: string, movement: any) {
-        if(movement.x)
+        if(movement.x){
+            this.players[ id ].strokes_x.push(this.players[ id ].x);
+            console.log(this.players[ id ].strokes_x);
             this.players[ id ].x = movement.x;
-        if(movement.y)
+        }
+        if(movement.y){
+            this.players[ id ].strokes_y.push(this.players[ id ].y);
             this.players[ id ].y = movement.y;
-        if(movement.z)
+        }
+        if(movement.z){
+            this.players[ id ].strokes_z.push(this.players[ id ].z);
             this.players[ id ].z = movement.z;
+        }
         
         if(movement.canvas_pos_x)
             this.players[ id ].canvas_pos_x = movement.canvas_pos_x;
@@ -190,6 +188,15 @@ export class State extends Schema {
 
     incrementPlayerScore(id: string){
         this.players[ id ].score++;
+    }
+
+    clearPlayer(id: string, data: string){
+        this.setPlayerState(id, 'clear');
+        if(data == 'true'){
+            this.players[ id ].strokes_x = [];
+            this.players[ id ].strokes_y = [];
+            this.players[ id ].strokes_z = [];
+        }
     }
 }
 
@@ -255,6 +262,10 @@ export class MyRoom extends Room<State> {
 
         if(data.state){
             this.state.setPlayerState(client.sessionId, data.state);
+        }
+
+        if(data.clear){
+            this.state.clearPlayer(client.sessionId, data.clear);
         }
 
         if(data.host_canvas_width){

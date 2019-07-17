@@ -4,138 +4,86 @@ var canvas,ctx;
 
 //variables for drawing on a path instead of dots
 var draw_path = true;
-const redraw_interval = 3;
-var redraw_timer = redraw_interval;
 
-var player_paths = {};
-var pointsX = [], pointsY = [], sizes = []
+//host/canvas
+var players_last_draw_index = {};
 
-//host draw function
-function canvasDraw(x,y,size,player) {
-    console.log('host draw function');
-    ctx.fillStyle =  "rgb("+player.color+")";
-
-    var min_size = 5;
-    var max_size = 20; 
-
-    console.log(x, y);
-    if(x<0 || y < 0) return;
-    
-    if(size<0){ size = 0; min_size = 0;}
-
-    if(draw_path){
-        player_paths[player.sessionId].pointsX.push(x);
-        player_paths[player.sessionId].pointsY.push(y);
-        player_paths[player.sessionId].sizes.push(min_size+size*(max_size-min_size));
-        if(--redraw_timer == 0){
-            canvasRedraw(player.color);
-            redraw_timer = redraw_interval;
-        }
-    }else{
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
-        ctx.closePath();
-        ctx.fill();
-    }   
-} 
-
-//host liftBrush function
-function liftCanvasBrush(player){
-    canvasRedraw(player);
-    player_paths[player.sessionId].pointsX = [];
-    player_paths[player.sessionId].pointsY = [];
-    player_paths[player.sessionId].sizes = [];
-}
+//client/brush
+var last_draw_pos = [-1, -1, -1];
 
 //host redraw function
-function canvasRedraw(player){
+function canvasDraw(player){
+    console.log(player.strokes_x, player.strokes_y, player.strokes_z);
+    let player_path = [player.strokes_x, player.strokes_y, player.strokes_z];
 
-    if(!player_paths[player.sessionId]) return;
+    var i = 0;
+    if(players_last_draw_index[player.sessionId]) i = players_last_draw_index[player.sessionId];
 
     ctx.strokeStyle = "rgb("+player.color+")";
     ctx.lineJoin = "round";
 
-    for(var i=0; i < player_paths[player.sessionId].pointsX.length; i++) {        
+    for(; i < player_path[0].length; i++) {        
         ctx.beginPath();
-        if(i) ctx.moveTo(player_paths[player.sessionId].pointsX[i-1], player_paths[player.sessionId].pointsY[i-1]);
-        else ctx.moveTo(player_paths[player.sessionId].pointsX[i]-1, player_paths[player.sessionId].pointsY[i]-1);   
-        ctx.lineWidth = player_paths[player.sessionId].sizes[i];
-        ctx.lineTo(player_paths[player.sessionId].pointsX[i], player_paths[player.sessionId].pointsY[i]);
+        if(i) ctx.moveTo(player_path[0][i-1], player_path[1][i-1]);
+        else ctx.moveTo(player_path[0][i]-1, player_path[1][i]-1);   
+
+        if(player_path[0][i] != -1){
+            ctx.lineWidth = player_path[2][i];
+            ctx.lineTo(player_path[0][i]-1, player_path[1][i]-1);
+        }
+
         ctx.closePath();
         ctx.stroke();
     }
 
-    //setting path arrays equal to its last element so draw continues path from there later
-    player_paths[player.sessionId].pointsX.splice(0, player_paths[player.sessionId].pointsX.length - 1);
-    player_paths[player.sessionId].pointsY.splice(0, player_paths[player.sessionId].pointsY.length - 1);
-    player_paths[player.sessionId].sizes.splice(0, player_paths[player.sessionId].sizes.length - 1);
+    players_last_draw_index[player.sessionId] = player_path[0].length;
+}
+
+function canvasRedraw(){
+    if(!room || !room.state) return;
+
+    for (let key in room.state.players) {
+        canvas_draw(room.state.players[key]);
+    }
 
 }
 
-//client draw func
-function brushDraw(x,y,size) {
-    console.log('client draw function');
-    ctx.fillStyle = "rgb("+main_player.color+")";
-
-    var min_size = 5;
-    var max_size = 20; 
-
-    console.log(x, y);
-    if(x<0 || y < 0) return;
-    
-    if(size<0){ size = 0; min_size = 0;}
-
-    if(draw_path){
-        pointsX.push(x*canvas.offsetWidth);
-        pointsY.push(y*canvas.offsetHeight);
-        sizes.push(min_size+size*(max_size-min_size));
-        if(--redraw_timer == 0){
-            brushRedraw();
-            redraw_timer = redraw_interval;
-        }
-    }else{
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, min_size+size*(max_size-min_size), 0, Math.PI*2, true); 
-        ctx.closePath();
-        ctx.fill();
-    }   
-} 
 
 //client liftBrush func
 function liftPlayerBrush(){
-    brushRedraw();
-    pointsX = [];
-    pointsY = [];
-    sizes = [];
+    last_draw_pos = [-1, -1, -1];
+    room.send({x:-1, y:-1, z:-1});
 }
 
 //client redraw func
-function brushRedraw(){
+function brushDraw(x, y, z){
     console.log("rgb("+main_player.color+")");
     ctx.strokeStyle = "rgb("+main_player.color+")";
     ctx.lineJoin = "round";
 
-    for(var i=0; i < pointsX.length; i++) {        
-        ctx.beginPath();
-        if(i) ctx.moveTo(pointsX[i-1], pointsY[i-1]);
-        else ctx.moveTo(pointsX[i]-1, pointsY[i]-1);   
-        ctx.lineWidth = sizes[i];
-        ctx.lineTo(pointsX[i], pointsY[i]);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    pointsX = [pointsX[pointsX.length-1]];
-    pointsY = [pointsY[pointsY.length-1]];
-    sizes = [sizes[sizes.length-1]];
+    ctx.beginPath();
+    
+    if(last_draw_pos && last_draw_pos[0] != -1) ctx.moveTo(last_draw_pos[0], last_draw_pos[1]);
+    else ctx.moveTo(x-1, y-1);
+    ctx.lineWidth = z;
+    if(x != -1) ctx.lineTo(x, y);
 
+    ctx.closePath();
+    ctx.stroke();
+
+    last_draw_pos = [x, y, z];
 }
 
 // Clear the canvas ctx using the canvas width and height
-function clearCanvas(canvas,ctx) {
+function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     room.send({canvas_state:'clear'});
+}
+
+// Clear the canvas ctx using the canvas width and height
+function clearBrush() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    room.send({clear:'true'});
 }
 
 function resizeCanvas(){

@@ -13,37 +13,53 @@ var last_draw_pos = [-1, -1, -1];
 
 //host redraw function
 function canvasDraw(player){
-    console.log(player.strokes_x, player.strokes_y, player.strokes_z);
-    let player_path = [player.strokes_x, player.strokes_y, player.strokes_z];
+    console.log(player)
+    let player_path = player.brush_strokes;
 
+    var offset_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x;
+    var offset_y = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y;
+    
     var i = 0;
     if(players_last_draw_index[player.sessionId]) i = players_last_draw_index[player.sessionId];
 
     ctx.strokeStyle = "rgb("+player.color+")";
     ctx.lineJoin = "round";
 
-    for(; i < player_path[0].length; i++) {        
+    for(; i < player_path.length; i++) {        
         ctx.beginPath();
-        if(i) ctx.moveTo(player_path[0][i-1], player_path[1][i-1]);
-        else ctx.moveTo(player_path[0][i]-1, player_path[1][i]-1);   
+        if(i && player_path[i-1].x != -1){
+            ctx.moveTo(
+                offset_x + player_path[i-1].x * player.device_width, 
+                offset_y + player_path[i-1].y * player.device_height
+                );
+        }
+        else{
+            ctx.moveTo(
+                offset_x + (player_path[i].x-.0001) * player.device_width, 
+                offset_y + (player_path[i].y-.0001) * player.device_height 
+                );   
+        }
 
-        if(player_path[0][i] != -1){
-            ctx.lineWidth = player_path[2][i];
-            ctx.lineTo(player_path[0][i]-1, player_path[1][i]-1);
+        if(player_path[i].x != -1){
+            ctx.lineWidth = player_path[i].z;
+            ctx.lineTo(
+                offset_x + (player_path[i].x) * player.device_width, 
+                offset_y + player_path[i].y * player.device_height
+                );
         }
 
         ctx.closePath();
         ctx.stroke();
     }
 
-    players_last_draw_index[player.sessionId] = player_path[0].length;
+    players_last_draw_index[player.sessionId] = player_path.length;
 }
 
 function canvasRedraw(){
     if(!room || !room.state) return;
 
     for (let key in room.state.players) {
-        canvas_draw(room.state.players[key]);
+        canvasDraw(room.state.players[key]);
     }
 
 }
@@ -65,7 +81,7 @@ function brushDraw(x, y, z){
     
     if(last_draw_pos && last_draw_pos[0] != -1) ctx.moveTo(last_draw_pos[0], last_draw_pos[1]);
     else ctx.moveTo(x-1, y-1);
-    ctx.lineWidth = z;
+    ctx.lineWidth = 10;
     if(x != -1) ctx.lineTo(x, y);
 
     ctx.closePath();

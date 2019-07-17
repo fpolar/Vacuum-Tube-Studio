@@ -39,8 +39,7 @@ Running The Project
 
 TODO
 -------------------
-- save every users every move/paint on the server for easiers clears and redraws and etc
-  - DONE but canvas reset may draw things in wrong z order
+- check new user clear
 
 - use just orientation and thick or thin mode to paint from user in one spot
 
@@ -66,28 +65,13 @@ if they're in a spot on the canvas where they should be able to.
   - maybe keep track of all 'dots' drawn so they can be redrawn on join?
   - related to below note
 
-- right now, all clients draw all other clients when signal recieved.
-  - check if incoming client signal position is within current clients view, if not dont draw
-  - right now this innefficiency isn't causing problems, but I could see it slowing down 
-  in the future
-
 - Tilt controls can feel a little awkward because of the small space u can move using it
   - finesse the values to make it feel tighter
-
-- drawing on client side way better than what it sends, fix that 
-  - it may just be a speed/latency issue, drawing a little slowly works fine
-    - this might be ok, people draw slowly when on mobile
-  - sometimes just switching to dots only fixes it for some reason
-
-- have a button/make user hold down on the canvas or their icon to draw when on tilt mode
 
 - after a few draws or after some condition is met, show tips on mobile
   - like a message that tells the user to hit their emoji to move their position on the canvas
 
-- add more customizability of experience to the tool bar
-  - a button to show/hide all users boundaries
-
-- add a tool bar to the client side
+- better tool bar to the client side
   - size slider
   - change emoji/color(most likely not let them select, just a randomization button)
 

@@ -119,9 +119,7 @@ function setupPlayerConnections(){
 		if(player.state == 'draw' && isHost){
 			//may be able to just pass player beca and do these explicit pos calculations in the draw func
 			console.log('draw on canvas');
-			var explicit_pos_x = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x + player.x*player.device_width;
-			var explicit_pos_y = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y + player.y*player.device_height;
-			canvasDraw(explicit_pos_x, explicit_pos_y, player.z, player);
+			canvasDraw(player);
 		}
 
 		if(player.state == 'tilt' || player.state == 'init'){
@@ -138,9 +136,9 @@ function setupPlayerConnections(){
 		if(state == 'path' && value == 0){
 			draw_path = false;
 		}
-		if(state == 'clear' && value == 1){		
-			clearCanvas();
-		}
+		// if(state == 'clear' && value == 1){		
+		// 	clearCanvas();
+		// }
 	}
 }
 

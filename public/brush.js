@@ -104,12 +104,15 @@ function handleDraw(event){
     var touch = event.touches[0];
     var x = touch.clientX;
     var y = touch.clientY;
+
+    x = (x - garden.offsetLeft)
+    y = (y - garden.offsetTop)
     brushDraw(x, y, .5);
+    
+    x = x/canvas.offsetWidth;
+    y = y/canvas.offsetHeight;
 
-    x = (x - garden.offsetLeft)/canvas.offsetWidth;
-    y = (y - garden.offsetTop)/canvas.offsetHeight;
-
-    room.send({state:'draw', x:x, y:y, z:.5});
+    room.send({state:'draw', x:x, y:y, z:10});
   }
   event.preventDefault();
 }

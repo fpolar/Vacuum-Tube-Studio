@@ -1,5 +1,16 @@
 import { Room } from "colyseus";
-import { Schema, type, MapSchema } from "@colyseus/schema";
+import { Schema, type, MapSchema , ArraySchema } from "@colyseus/schema";
+
+export class BrushStroke extends Schema {
+    @type("string")
+    playerId = "";
+    @type("number")
+    x = -1;
+    @type("number")
+    y = -1;
+    @type("number")
+    z = -1;
+}
 
 export class Player extends Schema {
     @type("string")
@@ -28,14 +39,22 @@ export class Player extends Schema {
     @type("number")
     z = -100;
 
-    strokes_x: number[] = [];
-    strokes_y: number[] = [];
-    strokes_z: number[] = [];
-
     @type("string")
     color = '-1';
     @type("string")
     emoji = '-1';
+
+    @type([BrushStroke])
+    brush_strokes = new ArraySchema<BrushStroke>();
+
+    createStroke (x: number, y: number, z: number) {
+        var b = new BrushStroke();
+        b.playerId = this.sessionId;
+        b.x = x;
+        b.y = y;
+        b.z = z;
+        this.brush_strokes.push(b);
+    }
 
 }
 
@@ -57,6 +76,10 @@ export class State extends Schema {
 
     @type({ map: Player })
     players = new MapSchema<Player>();
+
+    //stored again here for correct canvas redraw order
+    @type([BrushStroke])
+    brush_strokes = new ArraySchema<BrushStroke>();
 
     @type("string")
     current_word = 'game not started';
@@ -122,17 +145,17 @@ export class State extends Schema {
 
     movePlayer (id: string, movement: any) {
         if(movement.x){
-            this.players[ id ].strokes_x.push(this.players[ id ].x);
-            console.log(this.players[ id ].strokes_x);
             this.players[ id ].x = movement.x;
         }
         if(movement.y){
-            this.players[ id ].strokes_y.push(this.players[ id ].y);
             this.players[ id ].y = movement.y;
         }
         if(movement.z){
-            this.players[ id ].strokes_z.push(this.players[ id ].z);
             this.players[ id ].z = movement.z;
+        }
+
+        if(movement.x && movement.y && movement.z){
+            this.players[ id ].createStroke(movement.x, movement.y, movement.z);
         }
         
         if(movement.canvas_pos_x)

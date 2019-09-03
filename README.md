@@ -1,7 +1,46 @@
 Vacuum Tube Studio (POC)
 =========================
 
-This version of VTS is a simple UI for a host and multiple clients that allows mobile devices to paint on a digital canvas on the host computer using tilt or touch controls.
+This project came about when a group of friends wanted to play pictionary together, without having to leave the couch.
+
+I developed it with games like jackbox's drawful in mind, but I wanted to give even more freedom to the players
+with control over their drawings and their friends drawings. 
+That simple mechanic can create a collaborative or competitive environment, but it's fun every time.
+
+
+Running The Project
+-------------------
+
+- Download [nodejs](https://nodejs.org/en/)
+- Clone the project
+- In the command line or terminal:
+  - navigate into the project folder
+  - run `npm install`
+  - run `npm start`
+  - paste the ngrok url provided in the terminal into any web browser
+    - On desktops, laptops, or smartTVs, click the button with the canvas emoji to enter a room as a host/canvas
+    - On mobile devices, tap the button with the brush emoji to enter a room as a painter/player
+
+
+Playing the game
+-----------------
+
+- After following the instructions above, all players/plainters can tap the screen to start the game
+- One player is assigned as the guesser and the others are painters
+- The painters must try their best to draw the word shown at the top of their device
+  - They can tap their emoji/icon to move their drawing position on the canvas using tilt controls,
+    This means they can move over other peoples drawings and add on to them or sabotage them
+- Those drawings will appear on the host/tv and the guesser will have to look at that to guess the word out loud
+- Once the guesser gets the word, they can select on their screen which player(s) had the best drawings
+- All players the guesser selects recieve a point, and then a new round of that same loop starts
+
+
+Changing the Dictionary
+------------------------
+
+- Currently the dictionary of words the game will chose from are stored as an array at the top of the Room.ts file,
+  change that array to change the dictionary
+- There is a txt file system in development to make using custom dictionaries easier
 
 Background
 ----------
@@ -19,62 +58,3 @@ variables like 'player' or 'score' and why the players are defined by emojis.
 The accelerometer readings were very noisy and this led to innacurate renderings of the users motion,
 so I determined that using the phone exactly like a paintbrush is not yet possible.
 
-Therefore I reworked the project into a series of WarioWare-style micro games, [VTS](https://github.com/fpolar/VTS), that require less acuracy from the 
-accelerometer and use the gyrometer for drawing and other simple activities
-
-
-Running The Project
--------------------
-
-- Download [nodejs](https://nodejs.org/en/)
-- Clone the project
-- In the command line or terminal:
-  - navigate into the project folder
-  - run `npm install`
-  - run `npm start`
-  - paste the ngrok url provided in the terminal into any web browser
-    - On desktops, laptops, or smartTVs, click the button with the canvas emoji to enter a room as a host/canvas
-    - On mobile devices, tap the button with the brush emoji to enter a room as a painter/player
-
-
-TODO
--------------------
-- check new user clear
-
-- use just orientation and thick or thin mode to paint from user in one spot
-
-- double check my cloning of the player dom doesnt create problems with its id
-
-- pictionary meets heads up
-- make submit button so guesser can choose to give points to multiple people
-- big reveal of word animating towards screen(getting bigger) and fading out
-- when two players draw at the same time it flips out
-- for now, a simple timeout works fairly well, but a round counter could 
-  synchronize more cleanly in updategameclient
-- see if i can remove the player_state parameter from setupround in myroom.ts
-
-- add a button to allow user to save canvas as png (only fire once)
-`var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
-window.location.href=image;`
-
-- If I make this into a BR, I'm going to have to find a new way to store the word
-  or else people could cheat easily with the console
-
-- Users who enter later, risize, or refresh page cannot see the drawings on their client, even
-if they're in a spot on the canvas where they should be able to.
-  - maybe keep track of all 'dots' drawn so they can be redrawn on join?
-  - related to below note
-
-- Tilt controls can feel a little awkward because of the small space u can move using it
-  - finesse the values to make it feel tighter
-
-- after a few draws or after some condition is met, show tips on mobile
-  - like a message that tells the user to hit their emoji to move their position on the canvas
-
-- better tool bar to the client side
-  - size slider
-  - change emoji/color(most likely not let them select, just a randomization button)
-
-- try removing all jquery, it may be unnecessary
-
-- use let instead of var when the scope allows

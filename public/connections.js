@@ -94,6 +94,7 @@ function setupPlayerConnections(){
 		if(sessionId == main_player.sessionId){
 			main_player = player;
 		}
+		
 		if(player.state == 'ready'){
 			console.log("player ready", room.state.current_word);
 			if(main_player.sessionId == sessionId){
@@ -102,6 +103,7 @@ function setupPlayerConnections(){
 			}
 			updateGameClient();
 		}
+
 		if(player.state == 'guess'){
 			if(main_player.sessionId == sessionId){
 				console.log('player guessing');
@@ -110,12 +112,14 @@ function setupPlayerConnections(){
 			}
 			updateGameClient();
 		}
+
 		if(player.state == 'clear' && isHost){
 			//may be able to just pass player beca and do these explicit pos calculations in the draw func
 			console.log('player cleared, reseting canvas');
 			canvasRedraw();
 
 		}
+
 		if(player.state == 'draw' && isHost){
 			//may be able to just pass player beca and do these explicit pos calculations in the draw func
 			console.log('draw on canvas');
@@ -136,9 +140,7 @@ function setupPlayerConnections(){
 		if(state == 'path' && value == 0){
 			draw_path = false;
 		}
-		// if(state == 'clear' && value == 1){		
-		// 	clearCanvas();
-		// }
+		// if(state == 'c 
 	}
 }
 

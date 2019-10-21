@@ -14,14 +14,34 @@ var reconnectMilli = 10000;
 var last_draw_id = '';
 var last_word = '';
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBMAW7qT7q6jsjdWyS0VltpbaBAYaOrNFY",
+  authDomain: "vacuum-tube-studio.firebaseapp.com",
+  databaseURL: "https://vacuum-tube-studio.firebaseio.com",
+  projectId: "vacuum-tube-studio",
+  storageBucket: "vacuum-tube-studio.appspot.com",
+  messagingSenderId: "399300729320",
+  appId: "1:399300729320:web:c84ae2e42ec4d30a38ec5d",
+  measurementId: "G-D5PZ99QBPC"
+};
+
 function connectToRoom(mode){
 
-	var url = window.location.hostname;
-	var socket =  'wss://'+url;
-	if(url=="localhost"){
-		socket+=window.location.port;
-	}
+	// Initialize Firebase
+	var testFirebaseApp = firebase.initializeApp(firebaseConfig, "test");
 
+	var url = window.location.hostname;
+	if(url=="localhost"){
+		url+=":"+window.location.port;
+	}
+	var socket =  'ws://'+url;
+	if(location.protocol == "https:"){
+		socket = 'wss://'+url;
+	} 
+
+	//var host = window.document.location.host.replace(/:.*/, '');
+	//client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
+	
 	client = new Colyseus.Client(socket);
 	client.onError.add(function(err) {
 		console.log(err);

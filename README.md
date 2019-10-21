@@ -32,7 +32,7 @@ Playing the game
     This means they can move over other peoples drawings and add on to them or sabotage them
 - Those drawings will appear on the host/tv and the guesser will have to look at that to guess the word out loud
 - Once the guesser gets the word, they can select on their screen which player(s) had the best drawings
-- All players the guesser selects recieve a point, and then a new round of that same loop starts
+- All players the guesser selects receive a point, and then a new round of that same loop starts
 
 
 Changing the Dictionary

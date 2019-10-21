@@ -13,7 +13,8 @@
     "colyseus.js": "^0.10.5",
     "express": "^4.16.4",
     "ngrok": "^3.1.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "ts-node": "^8.1.0"
   },
   "engines": {
     "node": "8.x"
@@ -28,8 +29,7 @@
     "express"
   ],
   "devDependencies": {
-    "@colyseus/monitor": "^0.10.0",
-    "ts-node": "^8.1.0"
+    "@colyseus/monitor": "^0.10.0"
   },
   "author": "Frank Pol"
 }

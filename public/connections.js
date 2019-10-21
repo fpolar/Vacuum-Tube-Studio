@@ -16,13 +16,8 @@ var last_word = '';
 
 function connectToRoom(mode){
 
-	var url = window.location.hostname;
-	var socket =  'wss://'+url;
-	if(url=="localhost"){
-		socket+=window.location.port;
-	}
-
-	client = new Colyseus.Client(socket);
+	var host = window.document.location.host.replace(/:.*/, '');
+	client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
 	client.onError.add(function(err) {
 		console.log(err);
  		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));

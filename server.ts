@@ -35,10 +35,12 @@ gameServer.onShutdown(function(){
 });
 
 gameServer.listen(port);
-
-(async function() {
-	const url = await ngrok.connect(port);
-	console.log(`Listening on ${ url }`);
-})();
-
 console.log(`Listening on https://localhost:${ port }`);
+
+if(port == 8080){
+	console.log(`using ngrok`);
+	(async function() {
+		const url = await ngrok.connect(port);
+		console.log(`Listening on ${ url }`);
+	})();
+}

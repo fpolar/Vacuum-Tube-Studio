@@ -4,7 +4,7 @@ import fs from 'fs';
 import ngrok from 'ngrok';
 import { createServer } from 'http';
 import { Server, RedisPresence } from 'colyseus';
-import { monitor } from '@colyseus/monitor';
+//import { monitor } from '@colyseus/monitor';
 
 import { MyRoom } from "./MyRoom";
 
@@ -28,7 +28,7 @@ app.get('/', function(request, response) {
 
 
 // (optional) attach web monitoring panel
-app.use('/colyseus', monitor(gameServer));
+//app.use('/colyseus', monitor(gameServer));
 
 gameServer.onShutdown(function(){
   console.log(`game server is going down.`);

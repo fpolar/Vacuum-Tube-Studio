@@ -4,7 +4,7 @@
   "description": "This version of VTS is a simple UI for a host and multiple clients that allows mobile devices to paint on a digital canvas on the host computer using tilt or touch controls.",
   "main": "server.js",
   "scripts": {
-    "start": "ts-node server.ts",
+    "start": "npx ts-node server.ts",
     "debug": "node --inspect lib/server.js"
   },
   "dependencies": {

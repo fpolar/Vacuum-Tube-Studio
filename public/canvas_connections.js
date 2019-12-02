@@ -14,7 +14,9 @@ var reconnectMilli = 10000;
 var last_draw_id = '';
 var last_word = '';
 
-function connectToRoom(mode){
+connectToRoom();
+
+function connectToRoom(){
 
 	var host = window.document.location.host.replace(/:.*/, '');
 	client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
@@ -122,18 +124,6 @@ function setupPlayerConnections(){
 			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
 			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
 		}
-	}
-
-	room.state.canvas_state.onChange = function (value, state) {
-		if(state == 'path' && value == 1){
-			draw_path = true;
-		}
-		if(state == 'path' && value == 0){
-			draw_path = false;
-		}
-		// if(state == 'clear' && value == 1){		
-		// 	clearCanvas();
-		// }
 	}
 }
 

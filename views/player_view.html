@@ -13,19 +13,21 @@
     <script src="draw.js"></script>
     <script src="game.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="canvas_style.css">
+    <link rel="stylesheet" type="text/css" href="player_style.css">
   </head>
   <body>
-        <div id="canvas_container">
-            <canvas id="canvas">
-            </canvas>
-        </div>
-        <div id="player_container"></div>
-        <div id="qr_container">
-          <p>Point your phone's camera at this code to join!</p>
-          <img src="insert default qr code image here">
-        </div>
+    <div id="debug"> </div>
+      <div id="text"><div id="word">waiting.</div><div class="score">0</div></div>
+      <div id="garden">
+        <div id="player_tag" onclick="toggle_tilt()"></div>
+        <div id="message">  </div>
+        <canvas id="garden_canvas">
+        </canvas>
+        <div id="player_selector"></div>
+      </div>
+      <input type="submit" value="Clear" id="brushclearbutton" onclick="clearBrush();">
+      <div id="output"></div>
     <script src="brush.js"></script>
-    <script src="canvas_connections.js"></script>
+    <script src="player_connections.js"></script>
     </body>
 </html>

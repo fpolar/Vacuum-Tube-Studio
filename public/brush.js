@@ -1,4 +1,3 @@
-var ball;
 var garden;
 var output;
 

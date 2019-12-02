@@ -12,6 +12,18 @@ export class BrushStroke extends Schema {
     z = -1;
 }
 
+export class Round extends Schema {
+
+    @type("string")
+    current_word = 'game not started';
+
+    @type("number")
+    round_number = 0;
+
+    @type("number")
+    last_guesser_index = -1;
+}
+
 export class Player extends Schema {
     @type("string")
     sessionId = "";
@@ -81,14 +93,8 @@ export class State extends Schema {
     @type([BrushStroke])
     brush_strokes = new ArraySchema<BrushStroke>();
 
-    @type("string")
-    current_word = 'game not started';
-
-    @type("number")
-    round_number = 0;
-
-    @type("number")
-    last_guesser_index = -1;
+    @type(Round)
+    round = new Round();
 
     @type("number")
     host_canvas_width = -1;
@@ -172,41 +178,55 @@ export class State extends Schema {
     //if its the first round, players should be ready to start the game, if not they should just draw
     //so player_state will either be 'ready' or 'draw'
     setupRound(player_state){
+
+        //Setting Up the word for this round
         console.log('new round', this.tempDict);
         let new_word_index = Math.floor(Math.random() * this.tempDict.length);
-        this.current_word = this.tempDict[new_word_index];
-        console.log(new_word_index, this.tempDict[new_word_index], this.current_word);
+        this.round.current_word = this.tempDict[new_word_index];
+        console.log(new_word_index, this.tempDict[new_word_index], this.round.current_word);
         this.tempDict.splice(new_word_index, 1);
 
-        //this is a weird work around, take another try if it becomes frustrating in game
-        let i = 0;
-        let host_index = -1;
-        for (let key in this.players) {
-            if(this.players[key].state == 'host'){
-                host_index = i;
-                console.log(key, 'is host');
-            }
-            // this.setPlayerState(key, player_state);
-            this.setPlayerState(key, 'ready');
-            // console.log(key);
-            i++;
-        }
 
-        let guesser_index = Math.floor(Math.random() * i);
-        while(guesser_index == host_index || guesser_index == this.last_guesser_index){
-            guesser_index = Math.floor(Math.random() * i);
+        // this should no longer be necessary if I'm not storing the 
+        // canvas / host as a player
+                
+        //this is a weird work around, take another try if it becomes frustrating in game
+        // let i = 0;
+        // let host_index = -1;
+        // for (let key in this.players) {
+        //     if(this.players[key].state == 'host'){
+        //         host_index = i;
+        //         console.log(key, 'is host');
+        //     }
+        //     // this.setPlayerState(key, player_state);
+        //     this.setPlayerState(key, 'ready');
+        //     // console.log(key);
+        //     i++;
+        // }
+
+        // let guesser_index = Math.floor(Math.random() * i);
+        // while(guesser_index == host_index || guesser_index == this.last_guesser_index){
+        //     guesser_index = Math.floor(Math.random() * i);
+        // }
+        // this.last_guesser_index = guesser_index;
+        // console.log(guesser_index);
+
+
+        let guesser_index = Math.floor(Math.random() * this.players.size);
+        while(guesser_index == this.round.last_guesser_index){
+            guesser_index = Math.floor(Math.random() * this.players.size);
         }
-        this.last_guesser_index = guesser_index;
+        this.round.last_guesser_index = guesser_index;
         console.log(guesser_index);
 
-        i = 0;
+        let i = 0;
         for(let key in this.players) {
             if(guesser_index == i++) {
                 this.setPlayerState(key, 'guess');
                 console.log(key, ' is guessing ', this.players[key].state);
             }
         }
-        this.round_number++;
+        this.round.round_number++;
     }
 
     incrementPlayerScore(id: string){
@@ -309,6 +329,10 @@ export class MyRoom extends Room<State> {
         if(data.round_winner){
             // this.state.scores[data.round_winner]++;
             this.state.incrementPlayerScore(data.round_winner);
+        }
+
+        if(data.round_over){
+
         }
 
         if(data.start){

@@ -20,15 +20,25 @@ gameServer.register("my_room", MyRoom);
 
 app.use(express.static('public'));
 
-app.get('/', function(request, response) {
-    __dirname = __dirname.replace("\\lib", "");
-    __dirname = __dirname.replace("/lib", "");
-  response.sendFile(__dirname + '/views/index.html');
+// app.get('/', function(request, response) {
+//   console.log(__dirname);
+//   console.log(request);
+//     __dirname = __dirname.replace("\\lib", "");
+//     __dirname = __dirname.replace("/lib", "");
+//     //this may need to be request, look at express api to find out
+//     if(__dirname.includes("player")){
+// 	  response.sendFile(__dirname + '/views/player_view.html');
+//     }else{
+// 	  response.sendFile(__dirname + '/views/index.html');
+//     }
+// });
+
+app.get('/player', function(request, response) {
+	  response.sendFile(__dirname + '/views/player_view.html');
 });
-
-
-// (optional) attach web monitoring panel
-//app.use('/colyseus', monitor(gameServer));
+app.get('/', function(request, response) {
+	  response.sendFile(__dirname + '/views/index.html');
+});
 
 gameServer.onShutdown(function(){
   console.log(`game server is going down.`);

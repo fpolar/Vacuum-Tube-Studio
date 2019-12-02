@@ -26,17 +26,14 @@ function resizeGarden(){
 }
 
 function brush_init(){
-  $("#buttons").hide();
-  $("#brush_ui").show();
-  ball   = document.querySelector('#ball');
   garden = document.querySelector('#garden');
   output = document.querySelector('#output');
 
   garden_canvas_init();
-  resizeGarden();
+  //resizeGarden();
   window.addEventListener("resize", resizeGarden);
 
-  connectToRoom(1);
+  connectToRoom();
 }
 
 

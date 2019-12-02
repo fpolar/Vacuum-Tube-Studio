@@ -78,7 +78,7 @@ function initGuess(){
 
 function updateGameClient(){
 	document.getElementById("word").innerHTML = room.state.current_word;
-	if(!room || !room.state.players[main_player.sessionId]){
+	if(!room || !main_player || !room.state.players[main_player.sessionId]){
 		document.querySelector("#text .score").innerHTML = '0';
 	}else{
 		document.querySelector("#text .score").innerHTML = room.state.players[main_player.sessionId].score;

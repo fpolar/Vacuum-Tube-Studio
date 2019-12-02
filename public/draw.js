@@ -110,9 +110,6 @@ function resizeCanvas(){
 
 // Set-up the canvas and add our event handlers after the page has loaded
 function canvas_init() {
-    $("#canvas_ui").show();
-    $("#buttons").hide();
-    // Get the specific canvas element from the HTML document
     canvas = document.getElementById('canvas');
 
     ctx = $("#canvas")[0].getContext('2d');
@@ -120,6 +117,6 @@ function canvas_init() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    connectToRoom(0);
+    connectToRoom();
 
 }

@@ -14,8 +14,6 @@ var reconnectMilli = 10000;
 var last_draw_id = '';
 var last_word = '';
 
-connectToRoom();
-
 function connectToRoom(){
 
 	var host = window.document.location.host.replace(/:.*/, '');
@@ -42,9 +40,6 @@ function connectToRoom(){
 		room = client.join("my_room");
 	}
 
-	// deviceId = {sessionId: room.sessionId};
-	isHost = mode == 0;
-
 	room.onJoin.add(setupPlayerConnections);
 }
 
@@ -60,69 +55,32 @@ function setupPlayerConnections(){
 		// console.log(client, sessionId, player);
 
 		addNewPlayer(player, sessionId);
-
-		if(main_player && main_player.sessionId == sessionId && isHost){
-			if(room.state.host_canvas_width == -1){
-				room.send({state:'host',
-					host_canvas_width: canvas.offsetWidth, 
-					host_canvas_height: canvas.offsetHeight});
-			}else{
-				console.log('host already in room');
-				return;
-			}
-		}else if(!isHost){
-			resizeGarden();
-		}
-
+		resizeGarden();
 		window.addEventListener("error", function (e) {
 			room.send({error:e.message})
 		});
 	}
-
-	room.state.players.onRemove = function(player, sessionId) {
-		if(players[sessionId] && document.getElementById("canvas_container").contains(players[sessionId])){
-			document.getElementById("canvas_container").removeChild(players[sessionId]);
-			delete players[sessionId];
-		}
+	room.state.round.onChange = function (round, sessionId) {
+		updateGameClient();//possibly pass round as a parameter
 	}
 
 	room.state.players.onChange = function (player, sessionId) {
 		console.log(player.state);
 		if(sessionId == main_player.sessionId){
+			//updating the local client main_player value b/c of change
 			main_player = player;
-		}
-		if(player.state == 'ready'){
-			console.log("player ready", room.state.current_word);
-			if(main_player.sessionId == sessionId){
-				//remove redundant calls if word concurrency issue is fixed
-				reset_brush_ui();
-			}
-			updateGameClient();
-		}
-		if(player.state == 'guess'){
-			if(main_player.sessionId == sessionId){
-				console.log('player guessing');
-				reset_brush_ui();
+			if(player.state == 'guess'){
+				//start the guessing client user flow
 				initGuess();
 			}
-			updateGameClient();
-		}
-		if(player.state == 'clear' && isHost){
-			//may be able to just pass player beca and do these explicit pos calculations in the draw func
-			console.log('player cleared, reseting canvas');
-			canvasRedraw();
-
-		}
-		if(player.state == 'draw' && isHost){
-			//may be able to just pass player beca and do these explicit pos calculations in the draw func
-			console.log('draw on canvas');
-			canvasDraw(player);
-		}
-
-		if(player.state == 'tilt' || player.state == 'init'){
-			players[sessionId].style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
-			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
-			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
+		}else{
+			if(player.state == 'guess'){
+				//update client "who's guessing" div
+			}
+			if(player.state == 'draw'){
+				//if the draw of this player is within the current players boundaries
+				//draw here
+			}
 		}
 	}
 }
@@ -138,12 +96,10 @@ function addNewPlayer(player, sessionId){
 	dom.style.background = "rgb("+player.color+")";
 
 	console.log("adding player", sessionId, dom);
-	document.getElementById("canvas_container").appendChild(dom);
 	players[sessionId] = dom;
 
 	if(room.sessionId == sessionId){ 
 		main_player = player;
-		// fillPlayerSelector();
 		setCookie('deviceid', room.sessionId, reconnectMilli);
 
 		window.onunload = function(){
@@ -151,42 +107,21 @@ function addNewPlayer(player, sessionId){
 	  		setCookie('exittime', date.getTime(), reconnectMilli);
 		};
 		console.log(players);
-		if(!isHost){
-			resizeGarden();
-			$("html").css("background-color", "rgba("+player.color+", .2)");
-			// document.getElementById("player_tag").appendChild(main_dom);
-			// $("#player_tag").append("<div class='player' id='"+player.sessionId+
-			// 	"' style='background:rgb("+player.color+")'>"+player.emoji+"</div>");
-			document.getElementById("player_tag").appendChild(dom.cloneNode(true));
+		resizeGarden();
+		$("html").css("background-color", "rgba("+player.color+", .2)");
+		document.getElementById("player_tag").appendChild(dom.cloneNode(true));
 
-			//check for previous player state incase of reconnect
-			
-			if(player.state == 'guess'){
-				initGuess();
-				updateGameClient();
-			}else if(player.state == 'draw' || room.state.current_word != 'game not started'){
-				enable_touch();
-				updateGameClient();
-			}else{
-				setPlayerAsLeader();
-			}
+		//check for previous player state incase of reconnect
+		if(player.state == 'guess'){
+			initGuess();
+			updateGameClient();
+		}else if(player.state == 'draw' || room.state.current_word != 'game not started'){
+			enable_touch();
+			updateGameClient();
 		}else{
-			//dont show the hosts player icon on canvas, because he cant draw
-			dom.style.display = 'none';
-		}
-	} else{ 
-		console.log(main_player);
-		if(isHost){
-			document.getElementById("player_container").appendChild(dom.cloneNode(true));
-			if(document.getElementById(player.sessionId)){
-				//add something to show score
-			}
-		}else if(main_player && main_player.state == 'guess'){
-			insertInPlayerSelector(dom.cloneNode(true));
-			// fillPlayerSelector();
+			setPlayerAsLeader();
 		}
 	}
-	// if(player.state != 'host') players[sessionId] = dom;
 }
 
 //w3 cookie example functions

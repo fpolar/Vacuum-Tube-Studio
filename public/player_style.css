@@ -43,6 +43,21 @@ body{
   padding: 10% 0;
 }
 
+#guess_entry{
+  display: none;
+  height: 10%;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 10%;
+  overflow: none;
+}
+
+#guess_entry input{
+  font-size: 35px;
+  width: 100%;
+  padding: 10% 0;
+}
+
 #message{
   display: none;
   z-index: 102;

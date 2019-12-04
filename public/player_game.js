@@ -74,11 +74,13 @@ function initGuess(){
 	fillPlayerSelector();
 
 	//set the onclick for player selector
-	document.getElementById("player_selector").style.display = 'block';
+	// document.getElementById("player_selector").style.display = 'block';
+	document.getElementById("guess_entry").style.display = 'block';
 }
 
 function updateGameClient(){
-	document.getElementById("word").innerHTML = room.state.current_word;
+	document.getElementById("word").innerHTML = room.state.round.current_word;
+	document.getElementById("message").innerHTML = "";
 	if(!room || !main_player || !room.state.players[main_player.sessionId]){
 		document.querySelector("#text .score").innerHTML = '0';
 	}else{

@@ -22,7 +22,7 @@ function resizeGarden(){
   canvas_width = canvas.offsetWidth;
   canvas_height = canvas.offsetHeight;
   console.log(room);
-  if(room) room.send({device_width:maxX, device_height:maxY});
+  //if(room) room.send({device_width:maxX, device_height:maxY});
 }
 
 function brush_init(){

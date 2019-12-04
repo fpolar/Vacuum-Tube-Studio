@@ -206,12 +206,11 @@ export class State extends Schema {
         this.canvas_state['clear'] = 0;
     }
 
-    //if its the first round, players should be ready to start the game, if not they should just draw
-    //so player_state will either be 'ready' or 'draw'
-    setupRound(player_state){
+    setupRound(){
 
         //Setting Up the word for this round
-        console.log('new round', this.dict);
+        // console.log('new round', this.dict);
+        console.log('new round');
         let new_word_index = Math.floor(Math.random() * this.dict.length);
         this.round.current_word = this.dict[new_word_index];
         console.log(new_word_index, this.dict[new_word_index], this.round.current_word);
@@ -340,11 +339,11 @@ export class MyRoom extends Room<State> {
         }
 
         if(data.round_over){
-            this.state.setupRound('ready');
+            this.state.setupRound();
         }
 
         if(data.start){
-            this.state.setupRound('ready');
+            this.state.setupRound();
         }
     }
 

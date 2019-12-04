@@ -9,7 +9,7 @@ var isHost = false;
 var deviceid = {};
 //what problems could a global date var like this create
 var date = new Date(); 
-var reconnectMilli = 10000;
+var reconnect_timer = 12;
 
 var last_draw_id = '';
 var last_word = '';
@@ -29,15 +29,18 @@ function connectToRoom(){
  		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));
 	});
 	
+	client.isHost = false;
+
 	//SOME REJOIN DEBUG MESSAGES
 	// console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
 	// debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
-
+	console.log(parseInt(getCookie('exittime'))+reconnect_timer*1000);
+	console.log(date.getTime());
 	//rejoin or join
 	if(rejoin_enabled &&
 		getCookie('deviceid') != "" && 
 		getCookie('deviceid') != "undefined" &&
-		getCookie('exittime')+reconnectMilli>date.getTime()){
+		parseInt(getCookie('exittime'))+reconnect_timer*1000>date.getTime()){
 		console.log('rejoining');
 		deviceid = {sessionId: getCookie('deviceid')};
 		try{
@@ -69,6 +72,7 @@ function setupPlayerConnections(){
 
 		addNewPlayer(player, sessionId);
 		resizeGarden();
+		room.send({device_width:maxX, device_height:maxY});
 		window.addEventListener("error", function (e) {
 			room.send({error:e.message})
 		});
@@ -113,11 +117,11 @@ function addNewPlayer(player, sessionId){
 
 	if(room.sessionId == sessionId){ 
 		main_player = player;
-		setCookie('deviceid', room.sessionId, reconnectMilli);
+		setCookie('deviceid', room.sessionId, reconnect_timer*1000);
 
 		window.onunload = function(){
-			setCookie('deviceid', room.sessionId, reconnectMilli);
-	  		setCookie('exittime', date.getTime(), reconnectMilli);
+			setCookie('deviceid', room.sessionId, reconnect_timer*1000);
+	  		setCookie('exittime', date.getTime(), reconnect_timer*1000);
 		};
 		console.log(players);
 		resizeGarden();

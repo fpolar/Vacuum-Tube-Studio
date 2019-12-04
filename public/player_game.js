@@ -28,6 +28,7 @@ function startGame(){
 	if(Object.keys(players).length > 1){
 		room.send({start: 'start'});
 	    document.getElementById("message").style.display = "none";
+		document.getElementById("message").innerHTML = "";
 	    document.removeEventListener("click", startGame);
 		document.removeEventListener('touchstart', startGame, false);
 		document.removeEventListener('touchmove', startGame, false);

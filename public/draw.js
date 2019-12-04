@@ -105,6 +105,9 @@ function clearBrush() {
 function resizeCanvas(){
     ctx.canvas.width  = document.getElementById("canvas_container").offsetWidth;
     ctx.canvas.height = document.getElementById("canvas_container").offsetHeight;
+    if(room)
+        room.send({host_canvas_width:ctx.canvas.width, 
+            host_canvas_height:ctx.canvas.height});
 }
 
 

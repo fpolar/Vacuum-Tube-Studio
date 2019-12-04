@@ -228,6 +228,8 @@ export class State extends Schema {
             if(guesser_index == i++) {
                 this.setPlayerState(key, 'guess');
                 console.log(key, ' is guessing ', this.players[key].state);
+            }else{
+                this.setPlayerState(key, 'draw');
             }
         }
         this.round.round_number++;
@@ -279,6 +281,7 @@ export class MyRoom extends Room<State> {
     // }
 
     async onLeave (client, consented: boolean) {
+      console.log("client leaving: "+client.sessionId);
       // flag client as inactive for other users
       this.state.players[client.sessionId].connected = false;
 
@@ -295,7 +298,9 @@ export class MyRoom extends Room<State> {
         console.log("client reconnected! "+client.sessionId);
 
       } catch (e) {
-
+        if(this.state.hostID == client.sessionId){
+            this.state.hostID = "no host in room";
+        }
         // reconnect_timer seconds expired. let's remove the client.
         this.state.removePlayer(client.sessionId);
         console.log("client left for good! "+client.sessionId);

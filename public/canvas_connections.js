@@ -1,5 +1,4 @@
 var mobile_debug = true;
-var rejoin_enabled = true;
 var client, room;
 var players = {};
 
@@ -7,60 +6,21 @@ var main_player;
 var isHost = false;
 
 var deviceid = {};
-//what problems could a global date var like this create
-var date = new Date(); 
-var reconnect_timer = 12;
 
 var last_draw_id = '';
 var last_word = '';
 
-function connectToRoom(){
-
-	var host = window.document.location.host.replace(/:.*/, '');
-	client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
-	client.onError.add(function(err) {
-		console.log(err);
-		room.send({error:err.message})
-		// if (err.includes("rejoin")){
-		// 	//TODO display message indicating reconnect failed
-		// 	deleteAllCookies();
-		// 	connectToRoom();
-		// }
- 		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));
-	});
-	
-	client.isHost = false;
-
-	//SOME REJOIN DEBUG MESSAGES
-	// console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
-	// debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
-	console.log(parseInt(getCookie('exittime'))+reconnect_timer*1000);
-	console.log(date.getTime());
-	//rejoin or join
-	if(rejoin_enabled &&
-		getCookie('deviceid') != "" && 
-		getCookie('deviceid') != "undefined" &&
-		parseInt(getCookie('exittime'))+reconnect_timer*1000>date.getTime()){
-		console.log('rejoining');
-		deviceid = {sessionId: getCookie('deviceid')};
-		try{
-			room = client.rejoin("my_room", deviceid);	
-		}catch(err){
-			console.log('rejoining failed, attempting join');
-			deleteAllCookies();
-			room = client.join("my_room");
-		}
-	}else{
-		console.log('joining');
-		room = client.join("my_room");
-	}
-
-	room.onJoin.add(setupPlayerConnections);
-}
 function setupPlayerConnections(){
 	if(deviceid == {}){
 		deviceId = {sessionId: room.sessionId};
 	}
+
+	setCookie('deviceid', room.sessionId, reconnect_timer*1000);
+
+	window.onunload = function(){
+		setCookie('deviceid', room.sessionId, reconnect_timer*1000);
+  		setCookie('exittime', date.getTime(), reconnect_timer*1000);
+	};
 
 	room.state.players.onAdd = function(player, sessionId) {
 		// console.log(client, sessionId, player);
@@ -92,7 +52,7 @@ function setupPlayerConnections(){
 		if(player.state == 'tilt' || player.state == 'init'){
 			players[sessionId].style.left = (room.state.host_canvas_width-player.device_width)*player.canvas_pos_x+"px";
 			players[sessionId].style.top = (room.state.host_canvas_height-player.device_height)*player.canvas_pos_y+"px";
-			console.log('tilt',players[sessionId].style.left, players[sessionId].style.top);
+			console.log('init or tilt',players[sessionId].style.left, players[sessionId].style.top);
 		}
 	}
 }

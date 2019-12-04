@@ -1,5 +1,5 @@
 var mobile_debug = true;
-var rejoin_enabled = false;
+var rejoin_enabled = true;
 var client, room;
 var players = {};
 

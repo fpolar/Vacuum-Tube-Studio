@@ -1,5 +1,5 @@
 var mobile_debug = true;
-var rejoin_enabled = false;
+var rejoin_enabled = true;
 var client, room;
 var players = {};
 
@@ -20,11 +20,17 @@ function connectToRoom(){
 	client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
 	client.onError.add(function(err) {
 		console.log(err);
+		room.send({error:err.message})
+		// if (err.includes("rejoin")){
+		// 	//TODO display message indicating reconnect failed
+		// 	deleteAllCookies();
+		// 	connectToRoom();
+		// }
  		if(mobile_debug) debugOnSite("CLIENT ERROR:<br/>"+objectPropertiesString(err));
 	});
 	
+	//SOME REJOIN DEBUG MESSAGES
 	// console.log('time ', getCookie('exittime'), date.getTime(), getCookie('exittime')+reconnectMilli>date.getTime());
-
 	// debugOnSite(getCookie('deviceid')+' '+getCookie('exittime') +' '+date.getTime() +' '+( getCookie('exittime')+reconnectMilli>date.getTime()));
 
 	//rejoin or join
@@ -34,7 +40,13 @@ function connectToRoom(){
 		getCookie('exittime')+reconnectMilli>date.getTime()){
 		console.log('rejoining');
 		deviceid = {sessionId: getCookie('deviceid')};
-		room = client.rejoin("my_room", deviceid);
+		try{
+			room = client.rejoin("my_room", deviceid);	
+		}catch(err){
+			console.log('rejoining failed, attempting join');
+			deleteAllCookies();
+			room = client.join("my_room");
+		}
 	}else{
 		console.log('joining');
 		room = client.join("my_room");
@@ -51,6 +63,7 @@ function setupPlayerConnections(){
 	setInterval(function(){
 		if(document.getElementById('word').innerHTML != 'game not started') updateGameClient();
 	}, 1234);
+
 	room.state.players.onAdd = function(player, sessionId) {
 		// console.log(client, sessionId, player);
 
@@ -61,7 +74,7 @@ function setupPlayerConnections(){
 		});
 	}
 	room.state.round.onChange = function (round, sessionId) {
-		updateGameClient();//possibly pass round as a parameter
+		updateGameClient();//no need to pass round info as param b/c it can be accessed from wherever
 	}
 
 	room.state.players.onChange = function (player, sessionId) {
@@ -112,7 +125,9 @@ function addNewPlayer(player, sessionId){
 		document.getElementById("player_tag").appendChild(dom.cloneNode(true));
 
 		//check for previous player state incase of reconnect
-		if(player.state == 'guess'){
+		if(player.state == 'init'){
+			setPlayerAsLeader();
+		}else if(player.state == 'guess'){
 			initGuess();
 			updateGameClient();
 		}else if(player.state == 'draw' || room.state.current_word != 'game not started'){

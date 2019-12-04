@@ -1,3 +1,6 @@
+import fs from 'fs'
+import readline from 'readline'
+
 import { Room } from "colyseus";
 import { Schema, type, MapSchema , ArraySchema } from "@colyseus/schema";
 
@@ -13,7 +16,6 @@ export class BrushStroke extends Schema {
 }
 
 export class Round extends Schema {
-
     @type("string")
     current_word = 'game not started';
 
@@ -35,9 +37,9 @@ export class Player extends Schema {
     score = 0;
     
     @type("number")
-    canvas_pos_x = Math.random() ;
+    canvas_pos_x = Math.random();
     @type("number")
-    canvas_pos_y = Math.random() ;
+    canvas_pos_y = Math.random();
     
     @type("number")
     device_width = 0;
@@ -81,13 +83,40 @@ export class State extends Schema {
         '😄','😃','😀','😊','☺','😉','😍','😘','😚','😗','😙','😜','😝','😛','😳','😁','😔','😌','😒','😞','😣','😢','😂','😭','😪','😥','😰','😅','😓','😩','😫','😨','😱','😠','😡','😤','😖','😆','😋','😷','😎','😴','😵','😲','😟','😦','😧','😈','👿','😮','😬','😐','😕','😯','😶','😇','😏','😑','👲','👳','👮','👷','💂','👶','👦','👧','👨','👩','👴','👵','👱','👼','👸','😺','😸','😻','😽','😼','🙀','😿','😹','😾','👹','👺','🙈','🙉','🙊','💀','👽','💩','🔥','✨','🌟','💫','💥','💢','💦','💧','💤','💨','👂','👀','👃','👅','👄','👍','👎','👌','👊','✊','✌','👋','✋','👐','👆','👇','👉','👈','🙌','🙏','☝','👏','💪','🚶','🏃','💃','👫','👪','👬','👭','💏','💑','👯','🙆','🙅','💁','🙋','💆','💇','💅','👰','🙎','🙍','🙇','🎩','👑','👒','👟','👞','👡','👠','👢','👕','👔','👚','👗','🎽','👖','👘','👙','💼','👜','👝','👛','👓','🎀','🌂','💄','💛','💙','💜','💚','❤','💔','💗','💓','💕','💖','💞','💘','💌','💋','💍','💎','👤','👥','👣','💭','🐶','🐺','🐱','🐭','🐹','🐰','🐸','🐯','🐨','🐻','🐷','🐽','🐮','🐗','🐵','🐒','🐴','🐑','🐘','🐼','🐧','🐦','🐤','🐥','🐣','🐔','🐍','🐢','🐛','🐝','🐜','🐞','🐌','🐙','🐚','🐠','🐟','🐬','🐳','🐋','🐄','🐏','🐀','🐃','🐅','🐇','🐉','🐎','🐐','🐓','🐕','🐖','🐁','🐂','🐲','🐡','🐊','🐫','🐪','🐆','🐈','🐩','🐾','💐','🌸','🌷','🍀','🌹','🌻','🌺','🍁','🍃','🍂','🌿','🌾','🍄','🌵','🌴','🌲','🌳','🌰','🌱','🌼','🌐','🌞','🌝','🌚','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌜','🌛','🌙','🌍','🌎','🌏','🌋','🌌','🌠','⭐','☀','⛅','☁','⚡','☔','❄','⛄','🌀','🌁','🌈','🌊','🎍','💝','🎎','🎒','🎓','🎏','🎆','🎇','🎐','🎑','🎃','👻','🎅','🎄','🎁','🎋','🎉','🎊','🎈','🎌','🔮','🎥','📷','📹','📼','💿','📀','💽','💾','💻','📱','☎','📞','📟','📠','📡','📺','📻','🔓','🔒','🔏','🔐','🔑','💡','🔦','🔆','🔅','🔌','🔍','🛁','🛀','🚿','🚽','🔧','🔩','🔨','🚪','🚬','💣','🔫','🔪','💊','💉','💰','🎨','🎬','🎤','🎧','🎼','🎵','🎶','🎹','🎻','🎺','🎷','🎸','👾','🎮','🃏','🎴','🀄','🎲','🎯','🏈','🏀','⚽','⚾','🎾','🎱','🏉','🎳','⛳','🚵','🚴','🏁','🏇','🏆','🎿','🏂','🏊','🏄','🎣','☕','🍵','🍶','🍼','🍺','🍻','🍸','🍹','🍷','🍴','🍕','🍔','🍟','🍗','🍖','🍝','🍛','🍤','🍱','🍣','🍥','🍙','🍘','🍚','🍜','🍲','🍢','🍡','🍳','🍞','🍩','🍮','🍦','🍨','🍧','🎂','🍰','🍪','🍫','🍬','🍭','🍯','🍎','🍏','🍊','🍋','🍒','🍇','🍉','🍓','🍑','🍈','🍌','🍐','🍍','🍠','🍆','🍅','🌽','🌄','🌅','🌃','🗽','🌉','🎠','🎡','⛲','🎢','🚢','⛵','🚤','🚣','⚓','🚀','✈','💺','🚁','🚂','🚊','🚉','🚞','🚆','🚄','🚅','🚈','🚇','🚝','🚋','🚃','🚎','🚌','🚍','🚙','🚘','🚗','🚕','🚖','🚛','🚚','🚨','🚓','🚔','🚒','🚑','🚐','🚲','🚡','🚟','🚠','🚜','💈','🚏','🎰','♨','🗿','🎪','🎭','📍','🈁','🈯','🈳','🈵','🈴','🈲','🉐','🈹','🈺','🈶','🈚','🚻','🚹','🚺','🚼','🚾','🚰','🚮','🅿','♿','🚭','🈷','🈸','🈂','🛂','🛄','🛅','🛃','🉑','㊙','㊗','🆑','🆘','🆔','🚫','🔞','📵','🚯','🚱','🚳','🚷','🚸','⛔','✳','❇','❎','✅','✴','💟','🆚','📳','📴','🅰','🅱','🆎','🅾','💠','➿','♻','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎','🔯','🏧','💹','💲','💱','©','®','™','♠','♥','♣','♦',,'💯','✔','☑','🔘','🔗','➰','🔱'
     ];
 
-    tempDict: string[] = ['Zeph', 'Leya', 'Garryth', 'Sora', 'Rip Caidrow', 'Ata', 'Serena', 'Epep', 'Finley', 'Three Quarters'];
-    // var dict = [] //on init make this dictionary out of a comma sepeated file
-    // @type({ map: 'number' })
-    // scores = new MapSchema<'number'>();
+    dict: string[] = ['Zeph', 'Leya', 'Garryth', 'Sora', 'Rip Caidrow', 'Ata', 'Serena', 'Epep', 'Finley', 'Three Quarters'];
+
+    dictFromFile(filename: string){
+
+        console.log("Reading Game Dictionary From: ", filename);
+
+        const lineReader = readline.createInterface({
+            input: fs.createReadStream('./'+filename),
+            output: process.stdout
+        });
+
+        //because the 'this' changes when within following function
+        let thisState = this;
+        var stats = fs.stat(filename, function(err,stat){
+           if (stat && stat.isFile() ) {
+            thisState.dict = [];
+            lineReader.on('line', function(line) {
+                // console.log(line);
+                thisState.dict.push(line)
+            });
+           }else{
+                console.log(filename, " does not exist!")
+           }
+        });
+    }
+
+    @type("string")
+    hostID = "no host in room"
 
     @type({ map: Player })
     players = new MapSchema<Player>();
+
+    @type("number")
+    num_players = 0;
 
     //stored again here for correct canvas redraw order
     @type([BrushStroke])
@@ -118,11 +147,13 @@ export class State extends Schema {
         if (color_index > -1) {
             this.colors.splice(color_index, 1);
         }
+        this.num_players++;
     }
 
     removePlayer (id: string) {
         this.colors.push(this.players[ id ].color);
         this.emojis.push(this.players[ id ].emoji);
+        this.num_players--;
         delete this.players[ id ];
     }
 
@@ -180,44 +211,18 @@ export class State extends Schema {
     setupRound(player_state){
 
         //Setting Up the word for this round
-        console.log('new round', this.tempDict);
-        let new_word_index = Math.floor(Math.random() * this.tempDict.length);
-        this.round.current_word = this.tempDict[new_word_index];
-        console.log(new_word_index, this.tempDict[new_word_index], this.round.current_word);
-        this.tempDict.splice(new_word_index, 1);
+        console.log('new round', this.dict);
+        let new_word_index = Math.floor(Math.random() * this.dict.length);
+        this.round.current_word = this.dict[new_word_index];
+        console.log(new_word_index, this.dict[new_word_index], this.round.current_word);
+        this.dict.splice(new_word_index, 1);
 
-
-        // this should no longer be necessary if I'm not storing the 
-        // canvas / host as a player
-                
-        //this is a weird work around, take another try if it becomes frustrating in game
-        // let i = 0;
-        // let host_index = -1;
-        // for (let key in this.players) {
-        //     if(this.players[key].state == 'host'){
-        //         host_index = i;
-        //         console.log(key, 'is host');
-        //     }
-        //     // this.setPlayerState(key, player_state);
-        //     this.setPlayerState(key, 'ready');
-        //     // console.log(key);
-        //     i++;
-        // }
-
-        // let guesser_index = Math.floor(Math.random() * i);
-        // while(guesser_index == host_index || guesser_index == this.last_guesser_index){
-        //     guesser_index = Math.floor(Math.random() * i);
-        // }
-        // this.last_guesser_index = guesser_index;
-        // console.log(guesser_index);
-
-
-        let guesser_index = Math.floor(Math.random() * this.players.size);
+        let guesser_index = Math.floor(Math.random() * this.num_players);
         while(guesser_index == this.round.last_guesser_index){
-            guesser_index = Math.floor(Math.random() * this.players.size);
+            guesser_index = Math.floor(Math.random() * this.num_players);
         }
+
         this.round.last_guesser_index = guesser_index;
-        console.log(guesser_index);
 
         let i = 0;
         for(let key in this.players) {
@@ -244,46 +249,59 @@ export class State extends Schema {
 }
 
 export class MyRoom extends Room<State> {
+    @type("number")
+    reconnect_timer = 12;
+
     onInit (options) {
         console.log("MyRoom created!", options);
         this.setState(new State());
+        this.state.dictFromFile("dict.txt");
         this.state.setCanvasStates();
     }
 
     onJoin (client) {
         console.log("Joining MyRoom");
-        this.state.createPlayer(client.sessionId);
+
+        //TODO allow for multiple hosts to view game
+        if(this.state.hostID == "no host in room"){
+            this.state.hostID = client.sessionId;
+            console.log(client.sessionId + " is the host");
+        }
+        if(this.state.hostID != client.sessionId){
+            this.state.createPlayer(client.sessionId);
+            console.log(client.sessionId + " is a player");
+        }
         console.log(client.sessionId + " Joined MyRoom");
     }
 
-    onLeave(client) {
-        this.state.removePlayer(client.sessionId);
-        console.log("client left for good! "+client.sessionId);
-    }
-
-    // async onLeave (client, consented: boolean) {
-    //   // flag client as inactive for other users
-    //   this.state.players[client.sessionId].connected = false;
-
-    //   try {
-    //     if (consented) {
-    //         throw new Error("consented leave");
-    //     }
-
-    //     // allow disconnected client to rejoin into this room until 20 seconds
-    //     await this.allowReconnection(client, 10);
-
-    //     // client returned! let's re-activate it.
-    //     this.state.players[client.sessionId].connected = true;
-    //     console.log("client reconnected! "+client.sessionId);
-
-    //   } catch (e) {
-
-    //     // 52 seconds expired. let's remove the client.
+    // onLeave(client) {
     //     this.state.removePlayer(client.sessionId);
     //     console.log("client left for good! "+client.sessionId);
-    //   }
     // }
+
+    async onLeave (client, consented: boolean) {
+      // flag client as inactive for other users
+      this.state.players[client.sessionId].connected = false;
+
+      try {
+        if (consented) {
+            throw new Error("consented leave");
+        }
+
+        // allow disconnected client to rejoin into this room until reconnect_timer seconds
+        await this.allowReconnection(client, this.reconnect_timer);
+
+        // client returned! let's re-activate it.
+        this.state.players[client.sessionId].connected = true;
+        console.log("client reconnected! "+client.sessionId);
+
+      } catch (e) {
+
+        // reconnect_timer seconds expired. let's remove the client.
+        this.state.removePlayer(client.sessionId);
+        console.log("client left for good! "+client.sessionId);
+      }
+    }
 
     onMessage (client, data) {
         console.log("MyRoom received message from", client.sessionId, ":", data);
@@ -315,16 +333,6 @@ export class MyRoom extends Room<State> {
             this.state.host_canvas_width = data.host_canvas_width;
             this.state.host_canvas_height = data.host_canvas_height;
         }
-
-        if(data.canvas_state){
-            if(data.canvas_state == 'dots') {
-                this.state.canvas_state['path'] = 0;
-            }else if(data.canvas_state == 'path') {
-                this.state.canvas_state['path'] = 1;
-            }else if(data.canvas_state == 'clear'){
-                this.state.canvas_state['clear'] = 1;
-            }
-        }
         
         if(data.round_winner){
             // this.state.scores[data.round_winner]++;
@@ -332,15 +340,11 @@ export class MyRoom extends Room<State> {
         }
 
         if(data.round_over){
-
+            this.state.setupRound('ready');
         }
 
         if(data.start){
-            // if(data.start == 'next_round'){
-            //     this.state.setupRound('draw');
-            // }else{
-                this.state.setupRound('ready');
-            // }
+            this.state.setupRound('ready');
         }
     }
 

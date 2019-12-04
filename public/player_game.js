@@ -14,7 +14,7 @@ guesser_instructions.style.background = "Gainsboro";
 guesser_instructions.style.textAlign = "center";
 
 function setPlayerAsLeader(){
-    document.getElementById("message").innerHTML = "Tap Anywhere to start the game!"
+    document.getElementById("message").innerHTML = "Tap anywhere to start the game!"
     document.getElementById("message").style.display = "block";
     document.addEventListener("click", startGame);
 	document.addEventListener('touchstart', startGame, false);
@@ -24,8 +24,8 @@ function setPlayerAsLeader(){
 
 function startGame(){
 	console.log('start game ',Object.keys(players).length);
-	//only start the game if there is more than 1 player and 1 host in the room
-	if(Object.keys(players).length > 2){
+	//only start the game if there is more than 1 player  in the room
+	if(Object.keys(players).length > 1){
 		room.send({start: 'start'});
 	    document.getElementById("message").style.display = "none";
 	    document.removeEventListener("click", startGame);
@@ -33,7 +33,8 @@ function startGame(){
 		document.removeEventListener('touchmove', startGame, false);
 		document.removeEventListener('touchend', startGame, false);
 	}else{
-		//display some message, or add to current
+	    document.getElementById("message").innerHTML = "Tap anywhere to start the game "+
+	    	"once someone else joins the game!"
 	}
 }
 
